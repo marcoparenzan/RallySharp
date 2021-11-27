@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Models\Bugs1005.slc" />
+    <None Remove="Models\car-spritesheet - Copy.png" />
+    <None Remove="Models\car-spritesheet.png" />
+    <None Remove="Models\Level1.json" />
+    <None Remove="Models\Level1.png-tileset.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Models\car-spritesheet - Copy.png" />
+    <EmbeddedResource Include="Models\car-spritesheet.png" />
+    <EmbeddedResource Include="Models\Level1.json" />
+    <EmbeddedResource Include="Models\Level1.png-tileset.png" />
+  </ItemGroup>
+
+</Project>
