@@ -15,10 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Models\car-spritesheet - Copy.png" />
-    <EmbeddedResource Include="Models\car-spritesheet.png" />
-    <EmbeddedResource Include="Models\Level1.json" />
-    <EmbeddedResource Include="Models\Level1.png-tileset.png" />
+    <EmbeddedResource Include="Assets\car-spritesheet.png" />
+    <EmbeddedResource Include="Assets\Level1.json" />
+    <EmbeddedResource Include="Assets\Level1.png-tileset.png" />
   </ItemGroup>
 
 </Project>

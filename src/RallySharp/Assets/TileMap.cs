@@ -1,4 +1,4 @@
-﻿namespace RallySharp.Models
+﻿namespace RallySharp.Assets
 {
     using System.Globalization;
     using System.Text.Json.Serialization;

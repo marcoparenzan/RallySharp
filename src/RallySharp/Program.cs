@@ -1,3 +1,6 @@
+using RallySharp.Assets;
+using RallySharp.Engine;
+using RallySharp.Levels;
 using RallySharp.Models;
 using System;
 using System.Drawing;
@@ -14,8 +17,8 @@ namespace RallySharp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var resources = StageResources.Get();
-            var stage = new Stage(resources);
+            var resources = Level1Resources.Get();
+            var stage = new Level1(resources);
 
             var form =
                 new DoubleBufferForm()

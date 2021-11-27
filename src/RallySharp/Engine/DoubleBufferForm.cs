@@ -1,10 +1,12 @@
-﻿using RallySharp.Models;
+﻿using RallySharp.Assets;
+using RallySharp.Levels;
+using RallySharp.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace RallySharp
+namespace RallySharp.Engine
 {
     public partial class DoubleBufferForm : Form
     {
@@ -17,7 +19,7 @@ namespace RallySharp
 
         BufferedGraphics bufferedGraphics;
 
-        public DoubleBufferForm Initialize(Stage stage, StageResources resources)
+        public DoubleBufferForm Initialize(Level1 stage, Level1Resources resources)
         {
             this.stage = stage;
             this.resources = resources;
@@ -26,8 +28,8 @@ namespace RallySharp
             return this;
         }
 
-        private Stage stage;
-        private StageResources resources;
+        private Level1 stage;
+        private Level1Resources resources;
 
         public bool Suspended { get;  set; } = true;
         public int FrameRate { get; set; }
@@ -104,7 +106,7 @@ namespace RallySharp
             this.Invalidate();
         }
 
-        void Render(Stage stage, Graphics g)
+        void Render(Level1 stage, Graphics g)
         {
             var xx = stage.MainCar.Pos.x - (int)(this.ClientRectangle.Width / 2); if (xx < 0) xx = 0;
             var yy = stage.MainCar.Pos.y - (int)(this.ClientRectangle.Height / 2); if (yy < 0) yy = 0;

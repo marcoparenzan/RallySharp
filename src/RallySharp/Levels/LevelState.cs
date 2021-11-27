@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RallySharp.Models
+namespace RallySharp.Levels
 {
-    public enum StageState
+    public enum LevelState
     {
         Ready,
         Running

@@ -1,16 +1,18 @@
-﻿using System;
+﻿using RallySharp.Assets;
+using RallySharp.Models;
+using System;
 using System.Collections.Generic;
 
 
-namespace RallySharp.Models
+namespace RallySharp.Levels
 {
-    public class Stage
+    public class Level1
     {
-        StageResources resources;
+        Level1Resources resources;
 
         int carSpeedMag = 6;
 
-        public Stage(StageResources resources)
+        public Level1(Level1Resources resources)
         {
             this.resources = resources;
 
@@ -25,7 +27,7 @@ namespace RallySharp.Models
 
         public void Fire()
         {
-            if (State == StageState.Ready)
+            if (State == LevelState.Ready)
             {
                 Running();
                 MoveUp();
@@ -34,28 +36,28 @@ namespace RallySharp.Models
 
         public void MoveDown()
         {
-            if (State != StageState.Running) return;
+            if (State != LevelState.Running) return;
             MainCar.Speed = Direction.Down * carSpeedMag;
             MainCar.Type = "maincar-blue-6";
         }
 
         public void MoveUp()
         {
-            if (State != StageState.Running) return;
+            if (State != LevelState.Running) return;
             MainCar.Speed = Direction.Up * carSpeedMag;
             MainCar.Type = "maincar-blue-0";
         }
 
         public void MoveLeft()
         {
-            if (State != StageState.Running) return;
+            if (State != LevelState.Running) return;
             MainCar.Speed = Direction.Left * carSpeedMag;
             MainCar.Type = "maincar-blue-9";
         }
 
         public void MoveRight()
         {
-            if (State != StageState.Running) return;
+            if (State != LevelState.Running) return;
             MainCar.Speed = Direction.Right * carSpeedMag;
             MainCar.Type = "maincar-blue-3";
         }
@@ -64,7 +66,7 @@ namespace RallySharp.Models
         {
             switch (State)
             {
-                case StageState.Running:
+                case LevelState.Running:
 
                     // main update
                     var project_pos = MainCar.Pos + (MainCar.Speed.x, -MainCar.Speed.y);
@@ -88,7 +90,7 @@ namespace RallySharp.Models
                     }
 
                     break;
-                case StageState.Ready:
+                case LevelState.Ready:
                     break;
             }
         }
@@ -148,17 +150,17 @@ namespace RallySharp.Models
             return true;
         }
 
-        public StageState State { get; private set; }
+        public LevelState State { get; private set; }
 
-        public Stage Ready()
+        public Level1 Ready()
         {
-            State = StageState.Ready;
+            State = LevelState.Ready;
             return this;
         }
 
-        public Stage Running()
+        public Level1 Running()
         {
-            State = StageState.Running;
+            State = LevelState.Running;
             return this;
         }
     }
