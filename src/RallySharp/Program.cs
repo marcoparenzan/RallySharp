@@ -1,4 +1,3 @@
-using RallySharp.Assets;
 using RallySharp.Engine;
 using RallySharp.Levels;
 using RallySharp.Models;
@@ -17,13 +16,12 @@ namespace RallySharp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var resources = Level1Resources.Get();
-            var stage = new Level1(resources);
+            var stage = new Level0();
 
             var form =
                 new DoubleBufferForm()
             ;
-            form.Initialize(stage, resources);
+            form.Initialize(stage);
             //form.FormBorderStyle = FormBorderStyle.None;
             //form.WindowState = FormWindowState.Maximized;
             form.StartPosition = FormStartPosition.CenterScreen;

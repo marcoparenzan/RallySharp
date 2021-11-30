@@ -1,22 +1,17 @@
-﻿using RallySharp.Assets;
-using RallySharp.Models;
+﻿using RallySharp.Models;
 using System;
 using System.Collections.Generic;
 
 
 namespace RallySharp.Levels
 {
-    public class Level1
+    public class Level0
     {
-        Level1Resources resources;
-
         int carSpeedMag = 6;
 
-        public Level1(Level1Resources resources)
+        public Level0()
         {
-            this.resources = resources;
-
-            MainCar = new Sprite { Type = "maincar-blue-0", Pos = (480 + 12, 1272 + 12) };
+            MainCar = new Sprite { Type = 0, Pos = (480 + 12, 1272 + 12) };
         }
 
         public Sprite MainCar { get; private set; }
@@ -38,28 +33,28 @@ namespace RallySharp.Levels
         {
             if (State != LevelState.Running) return;
             MainCar.Speed = Direction.Down * carSpeedMag;
-            MainCar.Type = "maincar-blue-6";
+            MainCar.Type = 6;
         }
 
         public void MoveUp()
         {
             if (State != LevelState.Running) return;
             MainCar.Speed = Direction.Up * carSpeedMag;
-            MainCar.Type = "maincar-blue-0";
+            MainCar.Type = 0;
         }
 
         public void MoveLeft()
         {
             if (State != LevelState.Running) return;
             MainCar.Speed = Direction.Left * carSpeedMag;
-            MainCar.Type = "maincar-blue-9";
+            MainCar.Type = 9;
         }
 
         public void MoveRight()
         {
             if (State != LevelState.Running) return;
             MainCar.Speed = Direction.Right * carSpeedMag;
-            MainCar.Type = "maincar-blue-3";
+            MainCar.Type = 3;
         }
 
         public void Update()
@@ -102,33 +97,33 @@ namespace RallySharp.Levels
             
             if (Speed.x > 0)
             {
-                yt = (int)((pos.y) / resources.TileSize.y);
-                xt = (int)((pos.x + resources.TileSize.x / 2) / resources.TileSize.x);
-                var xm = (pos.x + resources.TileSize.x / 2) % resources.TileSize.x;
+                yt = (int)((pos.y) / Resources.TileHeight);
+                xt = (int)((pos.x + Resources.TileWidth / 2) / Resources.TileWidth);
+                var xm = (pos.x + Resources.TileWidth / 2) % Resources.TileWidth;
                 if (xm < 1) return Collision.None;
                 if (CollisionAt(xt, yt)) return Collision.Left;
             }
             else if (Speed.x < 0)
             {
-                yt = (int)((pos.y) / resources.TileSize.y);
-                xt = (int)((pos.x - resources.TileSize.x / 2) / resources.TileSize.x);
-                var xm = (pos.x - resources.TileSize.x / 2) % resources.TileSize.x;
+                yt = (int)((pos.y) / Resources.TileHeight);
+                xt = (int)((pos.x - Resources.TileWidth / 2) / Resources.TileWidth);
+                var xm = (pos.x - Resources.TileWidth / 2) % Resources.TileWidth;
                 if (xm < 1) return Collision.None;
                 if (CollisionAt(xt, yt)) return Collision.Right;
             }
             else if (Speed.y > 0)
             {
-                yt = (int)((pos.y - resources.TileSize.y / 2) / resources.TileSize.y);
-                xt = (int)((pos.x) / resources.TileSize.x);
-                var ym = (pos.y + resources.TileSize.y / 2) % resources.TileSize.y;
+                yt = (int)((pos.y - Resources.TileHeight / 2) / Resources.TileHeight);
+                xt = (int)((pos.x) / Resources.TileWidth);
+                var ym = (pos.y + Resources.TileHeight / 2) % Resources.TileHeight;
                 if (ym < 1) return Collision.None;
                 if (CollisionAt(xt, yt)) return Collision.Bottom;
             }
             else if (Speed.y < 0)
             {
-                yt = (int)((pos.y + resources.TileSize.y / 2) / resources.TileSize.y);
-                xt = (int)((pos.x) / resources.TileSize.x);
-                var ym = (pos.y + resources.TileSize.y / 2) % resources.TileSize.y;
+                yt = (int)((pos.y + Resources.TileHeight / 2) / Resources.TileHeight);
+                xt = (int)((pos.x) / Resources.TileWidth);
+                var ym = (pos.y + Resources.TileHeight / 2) % Resources.TileHeight;
                 if (ym < 1) return Collision.None;
                 if (CollisionAt(xt, yt)) return Collision.Top;
             }
@@ -139,12 +134,12 @@ namespace RallySharp.Levels
         private bool CollisionAt(int xt, int yt)
         {
             if (yt < 0) return false;
-            if (yt >= resources.Size.y) return false;
+            if (yt >= Resources.Height) return false;
             if (xt < 0) return false;
-            if (xt >= resources.Size.x) return false;
+            if (xt >= Resources.Width) return false;
 
-            var offset = (int) (yt * resources.Size.x + xt);
-            var tileId = resources.DefaultLayer[offset];
+            var offset = (int) (yt * Resources.Width + xt);
+            var tileId = Resources.Tiles[0][offset];
 
             if (tileId == 2) return false;
             return true;
@@ -152,13 +147,13 @@ namespace RallySharp.Levels
 
         public LevelState State { get; private set; }
 
-        public Level1 Ready()
+        public Level0 Ready()
         {
             State = LevelState.Ready;
             return this;
         }
 
-        public Level1 Running()
+        public Level0 Running()
         {
             State = LevelState.Running;
             return this;

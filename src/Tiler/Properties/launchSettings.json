@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Tiler": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\MarcoSoft\\Retrosharp\\BumpNSharp\\Assets\\Bump N Jump - Stage 1.png\""
+    }
+  }
+}

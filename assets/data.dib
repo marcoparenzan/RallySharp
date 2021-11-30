@@ -1,0 +1,5 @@
+#!csharp
+
+using System.IO;
+var bytes = File.ReadAllBytes("car-spritesheet.png");
+string.Join(",", bytes.Select(xx => $"0x{xx:X2}"))

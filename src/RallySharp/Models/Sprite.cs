@@ -8,7 +8,7 @@ namespace RallySharp.Models
 {
     public class Sprite
     {
-        public string Type { get; set; }
+        public int Type { get; set; }
         public Vec Pos { get; set; }
         public Vec Speed { get; set; }
     }
