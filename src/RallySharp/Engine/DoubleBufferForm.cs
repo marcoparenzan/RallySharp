@@ -16,23 +16,14 @@ namespace RallySharp.Engine
 
         BufferedGraphics bufferedGraphics;
 
-        public DoubleBufferForm Initialize(Level0 stage)
+        public DoubleBufferForm Initialize()
         {
-            this.stage = stage;
             this.ClientSize = new Size((int) ((Resources.Width + 1) * Resources.TileWidth), (int) ((Resources.Height + 1) * Resources.TileHeight));
             return this;
         }
 
-        private Level0 stage;
-
         public bool Suspended { get;  set; } = true;
         public int FrameRate { get; set; }
-
-        public ButtonTrigger Fire { get; } = new ButtonTrigger();
-        public ButtonTrigger MoveLeft { get; } = new ButtonTrigger();
-        public ButtonTrigger MoveRight { get; } = new ButtonTrigger();
-        public ButtonTrigger MoveUp { get; } = new ButtonTrigger();
-        public ButtonTrigger MoveDown { get; } = new ButtonTrigger();
 
         protected override void OnResizeEnd(EventArgs e)
         {
@@ -65,33 +56,7 @@ namespace RallySharp.Engine
             }
         }
 
-        public void FrameUpdate()
-        {
-            if (MoveLeft.Triggered())
-            {
-                stage.MoveLeft();
-            }
-            if (MoveRight.Triggered())
-            {
-                stage.MoveRight();
-            }
-            if (MoveUp.Triggered())
-            {
-                stage.MoveUp();
-            }
-            if (MoveDown.Triggered())
-            {
-                stage.MoveDown();
-            }
-            if (Fire.Triggered())
-            {
-                stage.Fire();
-            }
-
-            stage.Update();
-        }
-
-        public void FrameRender()
+        public void FrameRender(Level0 stage)
         {
             bufferedGraphics.Graphics.Clear(Color.Black);
             Render(stage, bufferedGraphics.Graphics);
@@ -143,13 +108,16 @@ namespace RallySharp.Engine
             //
 
             var f = Resources.SpriteSheetRectCache[0][stage.MainCar.Type];
-            var mainProj = new RectangleF(stage.MainCar.Pos.x - pos.x - (f.Width / 2), stage.MainCar.Pos.y - pos.y - (f.Height / 2), f.Width, f.Height);
-            g.DrawImage(Resources.SpriteSheet[0], mainProj, Resources.SpriteSheetRectCache[0][stage.MainCar.Type], GraphicsUnit.Pixel);
+            //var mainProj = new RectangleF(stage.MainCar.Pos.x - pos.x - (f.Width / 2), stage.MainCar.Pos.y - pos.y - (f.Height / 2), f.Width, f.Height);
+            var mainProj = new RectangleF(stage.MainCar.Pos.x - pos.x, stage.MainCar.Pos.y - pos.y, f.Width, f.Height);
+            g.DrawImage(Resources.SpriteSheet[0], mainProj, Resources.SpriteSheetRectCache[0][stage.MainCar.Type*3], GraphicsUnit.Pixel);
+            g.DrawRectangle(stage.MainCar.Collided ? Pens.Yellow : Pens.White, mainProj.X, mainProj.Y, mainProj.Width-1, mainProj.Height-1);
 
             foreach (var enemySprite in stage.Enemies)
             {
                 f = Resources.SpriteSheetRectCache[0][enemySprite.Type];
-                var enemyProj = new RectangleF(enemySprite.Pos.x - pos.x - (f.Width / 2), enemySprite.Pos.y - pos.y - (f.Height / 2), f.Width, f.Height);
+                //var enemyProj = new RectangleF(enemySprite.Pos.x - pos.x - (f.Width / 2), enemySprite.Pos.y - pos.y - (f.Height / 2), f.Width, f.Height);
+                var enemyProj = new RectangleF(enemySprite.Pos.x - pos.x, enemySprite.Pos.y - pos.y, f.Width-1, f.Height-1);
 
                 // check if enemy is visible
                 if (enemyProj.X < 0) continue;

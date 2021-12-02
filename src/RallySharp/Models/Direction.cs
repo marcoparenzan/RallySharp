@@ -4,6 +4,8 @@ namespace RallySharp.Models
 {
     public static class Direction
     {
+        public static Vec[] Rotation = { (0, 1), (1, 0), (0, -1), (-1, 0) };
+
         public static Vec None = (0, 0);
         public static Vec Up = (0, 1);
         public static Vec Right = (1, 0);

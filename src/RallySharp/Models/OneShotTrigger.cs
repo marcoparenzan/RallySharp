@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RallySharp.Engine
+namespace RallySharp.Models
 {
-    public class ButtonTrigger
+    public class OneShotTrigger
     {
         bool triggered;
         bool handled;
@@ -29,8 +29,6 @@ namespace RallySharp.Engine
         {
             return $"{triggered}";
         }
-
-        public bool Handled { get => handled; }
 
         public bool Triggered()
         {

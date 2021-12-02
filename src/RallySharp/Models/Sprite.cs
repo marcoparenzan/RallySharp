@@ -11,5 +11,6 @@ namespace RallySharp.Models
         public int Type { get; set; }
         public Vec Pos { get; set; }
         public Vec Speed { get; set; }
+        public bool Collided { get; set; }
     }
 }
