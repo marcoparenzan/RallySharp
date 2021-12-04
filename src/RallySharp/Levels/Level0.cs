@@ -1,4 +1,5 @@
 ﻿using RallySharp.Models;
+using System;
 using System.Collections.Generic;
 
 
@@ -6,19 +7,20 @@ namespace RallySharp.Levels
 {
     public class Level0
     {
-        int carSpeedMag = 6;
-
         public Level0()
         {
-            //MainCar = new Sprite { Type = 0, Pos = (480 + 12, 1272 + 12) };
-            MainCar = new Sprite { Type = 0, Pos = (480, 1272) };
+            mainSprite = new MainSprite { CurrentAnimationFrame = 0, Pos = (480, 1272) };
+            sprites.Add(mainSprite);
+            Update = Ready;
         }
 
-        public Sprite MainCar { get; private set; }
+        private MainSprite mainSprite;
 
-        private List<Sprite> enemies = new List<Sprite>();
+        private List<Sprite> sprites = new List<Sprite>();
 
-        public IEnumerable<Sprite> Enemies => enemies;
+        public MainSprite MainSprite => mainSprite;
+
+        public IEnumerable<Sprite> Sprites => sprites;
 
         public ContinuousTrigger Fire { get; } = new ContinuousTrigger();
         public ContinuousTrigger MoveLeft { get; } = new ContinuousTrigger();
@@ -26,163 +28,56 @@ namespace RallySharp.Levels
         public ContinuousTrigger MoveUp { get; } = new ContinuousTrigger();
         public ContinuousTrigger MoveDown { get; } = new ContinuousTrigger();
 
-        public void Update()
+        private void Running()
         {
-            switch (State)
+            if (Fire.Triggered())
             {
-                case LevelState.Running:
+                mainSprite.NewDirection();
+            }
+            else if (MoveUp.Triggered())
+            {
+                mainSprite.NewDirection(0);
+            }
+            else if (MoveRight.Triggered())
+            {
+                mainSprite.NewDirection(1);
+            }
+            else if (MoveDown.Triggered())
+            {
+                mainSprite.NewDirection(2);
+            }
+            else if (MoveLeft.Triggered())
+            {
+                mainSprite.NewDirection(3);
+            }
+            else
+            {
+                mainSprite.NewDirection();
+            }
 
-                    var newType = -1;
-                    var newSpeed = MainCar.Speed; // auto or not // Direction.None;
-                    var newPos = MainCar.Pos;
-                    var colliding = Collision.None;
-                    var rotation = 0;
-                    var xt = 0;
-                    var yt = 0;
-
-                    if (Fire.Triggered())
-                    {
-                    }
-                    else if (MoveUp.Triggered())
-                    {
-                        newType = 0;
-                    }
-                    else if (MoveRight.Triggered())
-                    {
-                        newType = 1;
-                    }
-                    else if (MoveDown.Triggered())
-                    {
-                        newType = 2;
-                    }
-                    else if (MoveLeft.Triggered())
-                    {
-                        newType = 3;
-                    }
-
-                    do
-                    {
-                        if ((newType == 0) || (newType == -1) && (newSpeed.y > 0))
-                        {
-                            newType = 0;
-                            newSpeed = Direction.Rotation[newType] * carSpeedMag;
-                            newPos = MainCar.Pos + (newSpeed.x, -newSpeed.y);
-                            yt = (int)((newPos.y) / Resources.TileHeight);
-                            xt = (int)((newPos.x) / Resources.TileWidth);
-                            if (CollisionAt(xt, yt))
-                            {
-                                colliding = Collision.Top;
-                                MainCar.Collided = true;
-                                newType = (newType + (rotation++)) % 4;
-                                newSpeed = Direction.Rotation[newType] * carSpeedMag;
-                            }
-                            else
-                            {
-                                colliding = Collision.None;
-                            }
-                        }
-                        else if ((newType == 1) || (newType == -1) && (newSpeed.x > 0))
-                        {
-                            newType = 1;
-                            newSpeed = Direction.Rotation[newType] * carSpeedMag;
-                            newPos = MainCar.Pos + (newSpeed.x, -newSpeed.y);
-                            yt = (int)((newPos.y) / Resources.TileHeight);
-                            xt = (int)((newPos.x + Resources.TileWidth - 1) / Resources.TileWidth);
-                            if (CollisionAt(xt, yt))
-                            {
-                                colliding = Collision.Top;
-                                MainCar.Collided = true;
-                                newType = (newType+(rotation++))%4;
-                                newSpeed = Direction.Rotation[newType] * carSpeedMag;
-                            }
-                            else
-                            {
-                                colliding = Collision.None;
-                            }
-                        }
-                        else if ((newType == 2) || (newType == -1) && (newSpeed.y < 0))
-                        {
-                            newType = 2;
-                            newSpeed = Direction.Rotation[newType] * carSpeedMag;
-                            newPos = MainCar.Pos + (newSpeed.x, -newSpeed.y);
-                            yt = (int)((newPos.y + Resources.TileHeight - 1) / Resources.TileHeight);
-                            xt = (int)((newPos.x) / Resources.TileWidth);
-                            if (CollisionAt(xt, yt))
-                            {
-                                colliding = Collision.Top;
-                                MainCar.Collided = true;
-                                newType = (newType + (rotation++)) % 4;
-                                newSpeed = Direction.Rotation[newType] * carSpeedMag;
-                            }
-                            else
-                            {
-                                colliding = Collision.None;
-                            }
-                        }
-                        else if ((newType == 3) || (newType == -1) && (newSpeed.x < 0))
-                        {
-                            newType = 3;
-                            newSpeed = Direction.Rotation[newType] * carSpeedMag;
-                            newPos = MainCar.Pos + (newSpeed.x, -newSpeed.y);
-                            yt = (int)((newPos.y) / Resources.TileHeight);
-                            xt = (int)((newPos.x) / Resources.TileWidth);
-                            if (CollisionAt(xt, yt))
-                            {
-                                colliding = Collision.Top;
-                                MainCar.Collided = true;
-                                newType = (newType + (rotation++)) % 4;
-                                newSpeed = Direction.Rotation[newType] * carSpeedMag;
-                            }
-                            else
-                            {
-                                colliding = Collision.None;
-                            }
-                        }
-                    } while (colliding != Collision.None);
-
-                    // out...then update
-                    MainCar.Collided = false;
-                    MainCar.Pos = newPos;
-                    MainCar.Speed = newSpeed;
-                    MainCar.Type = newType;
-
-                    foreach (var sprite in enemies)
-                    {
-                        sprite.Pos += (sprite.Speed.x, -sprite.Speed.y);
-                    }
-
-                    break;
-                case LevelState.Ready:
-                    if (Fire.Triggered())
-                    {
-                        Running();
-                        MainCar.Speed = Direction.Up * carSpeedMag;
-                    }
-                    break;
+            foreach (var sprite in sprites)
+            {
+                sprite.Update();
             }
         }
 
-        private bool CollisionAt(int xt, int yt)
+        private void Ready()
         {
-            var offset = (int) (yt * Resources.Width + xt);
-            var tileId = Resources.Tiles[0][offset];
-
-            if (tileId == 2) return false;
-            return true;
+            if (Fire.Triggered())
+            {
+                Update = Running;
+                foreach (var sprite in sprites)
+                {
+                    sprite.GoToRunning();
+                }
+                mainSprite.Speed = Sprite.Direction[0];
+            }
+            foreach (var sprite in sprites)
+            {
+                sprite.Update();
+            }
         }
 
-        public LevelState State { get; private set; }
-
-        public Level0 Ready()
-        {
-            State = LevelState.Ready;
-            return this;
-        }
-
-        public Level0 Running()
-        {
-            State = LevelState.Running;
-            return this;
-        }
+        public Action Update { get; private set; }
     }
 }
