@@ -15,6 +15,8 @@ namespace RallySharp.Levels
             Update = Ready;
         }
 
+        public int Index { get => 0; }
+
         readonly MainSprite mainSprite;
 
         readonly List<Sprite> sprites;

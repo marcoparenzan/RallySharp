@@ -87,7 +87,7 @@ namespace RallySharp
             {
                 var start = DateTime.Now;
 
-                form.Render(stage);
+                form.Render(stage, stage.MainSprite);
                 stage.Update();
 
                 var stop = DateTime.Now;
