@@ -81,7 +81,7 @@ namespace RallySharp
 
             var refrate = (int) Math.Round(1000.0 / 30, 0);
 
-            var timer = new Timer();
+            Timer timer = new();
             timer.Interval = refrate;
             timer.Tick += (s, e) =>
             {

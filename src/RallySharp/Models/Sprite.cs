@@ -9,37 +9,94 @@ namespace RallySharp.Models
 {
     public class Sprite
     {
-        public readonly static Vec[] Direction = { (0, 6), (6, 0), (0, -6), (-6, 0) };
+        protected readonly static Vec[] Speed = { (0, -6), (6, 0), (0, 6), (-6, 0) };
 
         public Sprite()
         {
-            Update = Ready;
+            this.Animation = new(12);
+            Ready();
         }
 
         public Vec Pos { get; set; }
-        public Vec Speed { get; set; }
+        public int Direction { get; set; }
 
         // animation
-        public int CurrentAnimationFrame { get; set; }
-        public int AnimationEnds { get; set; }
+        public Animation Animation { get; set; }
 
-        // debugging
-        public bool Collided { get; set; }
+        int? newDirection;
 
-        protected virtual void Ready()
-        { 
-        }
+        public void NewDirection(int? value = null) => newDirection = value;
 
-        protected virtual void Running()
+        protected virtual void UpdateRunning()
         {
-            Pos += (Speed.x, -Speed.y);
+            newDirection ??= Direction;
+            var rotation = 0;
+
+            while (true)
+            {
+                var xt = 0;
+                var yt = 0;
+
+                var nextPos = Pos + Speed[newDirection.Value];
+                if (newDirection == 0)
+                {
+                    yt = (int)((nextPos.Y) / Resources.TileHeight);
+                    xt = (int)((nextPos.X) / Resources.TileWidth);
+                }
+                else if (newDirection == 1)
+                {
+                    yt = (int)((nextPos.Y) / Resources.TileHeight);
+                    xt = (int)((nextPos.X + Resources.TileWidth - 1) / Resources.TileWidth);
+                }
+                else if (newDirection == 2)
+                {
+                    yt = (int)((nextPos.Y + Resources.TileHeight - 1) / Resources.TileHeight);
+                    xt = (int)((nextPos.X) / Resources.TileWidth);
+                }
+                else if (newDirection == 3)
+                {
+                    yt = (int)((nextPos.Y) / Resources.TileHeight);
+                    xt = (int)((nextPos.X) / Resources.TileWidth);
+                }
+
+                var offset = (int)(yt * Resources.Width + xt);
+                var tileId = Resources.Tiles[0][offset];
+
+                if (tileId != 2)
+                {
+                    newDirection = (newDirection + (++rotation)) % 4; // increased rotation to make 90/180/270
+                }
+                else
+                {
+                    if (newDirection == Direction)
+                    {
+                        Animation.Update();
+                    }
+                    else
+                    {
+                        Animation.NewDirection(newDirection.Value, (rotation == 2) ? -1 : 1);
+                    }
+                    Pos = nextPos;
+                    Direction = newDirection.Value;
+                    newDirection = null; // reset so does not loop
+                    break;
+                }
+            }
+        }
+        protected virtual void UpdateReady()
+        {
         }
 
         public Action Update { get; private set; }
 
-        public void GoToRunning()
+        public void Running()
         {
-            Update = Running;
+            Update = UpdateRunning;
+        }
+
+        public void Ready()
+        {
+            Update = UpdateReady;
         }
     }
 }

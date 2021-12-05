@@ -9,14 +9,15 @@ namespace RallySharp.Levels
     {
         public Level0()
         {
-            mainSprite = new MainSprite { CurrentAnimationFrame = 0, Pos = (480, 1272) };
+            mainSprite = new MainSprite { Pos = (480, 1272) };
+            sprites = new();
             sprites.Add(mainSprite);
             Update = Ready;
         }
 
-        private MainSprite mainSprite;
+        readonly MainSprite mainSprite;
 
-        private List<Sprite> sprites = new List<Sprite>();
+        readonly List<Sprite> sprites;
 
         public MainSprite MainSprite => mainSprite;
 
@@ -68,9 +69,9 @@ namespace RallySharp.Levels
                 Update = Running;
                 foreach (var sprite in sprites)
                 {
-                    sprite.GoToRunning();
+                    sprite.Running();
                 }
-                mainSprite.Speed = Sprite.Direction[0];
+                mainSprite.Direction = 0;
             }
             foreach (var sprite in sprites)
             {

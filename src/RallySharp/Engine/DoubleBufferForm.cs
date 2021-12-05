@@ -65,9 +65,8 @@ namespace RallySharp.Engine
             //
             //
 
-            var xx = stage.MainSprite.Pos.x - (int)(this.ClientRectangle.Width / 2); if (xx < 0) xx = 0;
-            var yy = stage.MainSprite.Pos.y - (int)(this.ClientRectangle.Height / 2); if (yy < 0) yy = 0;
-            var pos = (x: xx, y: yy);
+            var xx = stage.MainSprite.Pos.X - (int)(this.ClientRectangle.Width / 2); if (xx < 0) xx = 0;
+            var yy = stage.MainSprite.Pos.Y - (int)(this.ClientRectangle.Height / 2); if (yy < 0) yy = 0;
 
             //
             // render world
@@ -78,9 +77,9 @@ namespace RallySharp.Engine
             var xs = (int)(this.ClientRectangle.Width / Resources.TileWidth);
 
             // the x,y converted to offset in the map
-            var yt = (int)(Math.Max(pos.y, 0) / Resources.TileHeight); var ym = pos.y % Resources.TileHeight;
+            var yt = (int)(Math.Max(yy, 0) / Resources.TileHeight); var ym = yy % Resources.TileHeight;
             if (ym > 0) { yt++; ym = Resources.TileHeight - ym; }
-            var xt = (int)(Math.Max(pos.x, 0) / Resources.TileWidth); var xm = pos.x % Resources.TileWidth;
+            var xt = (int)(Math.Max(xx, 0) / Resources.TileWidth); var xm = xx % Resources.TileWidth;
             if (xm > 0) { xt++; xm = Resources.TileWidth - xm; }
 
             // render
@@ -107,8 +106,8 @@ namespace RallySharp.Engine
 
             foreach (var sprite in stage.Sprites)
             {
-                var f = Resources.SpriteSheetRectCache[0][sprite.CurrentAnimationFrame];
-                var projection = new RectangleF(sprite.Pos.x - pos.x, sprite.Pos.y - pos.y, f.Width - 1, f.Height - 1);
+                var frame = Resources.SpriteSheetRectCache[0][sprite.Animation.CurrentFrame];
+                var projection = new RectangleF(sprite.Pos.X - xx, sprite.Pos.Y - yy, frame.Width - 1, frame.Height - 1);
 
                 // check if enemy is visible
                 if (projection.X < 0) return;
@@ -117,14 +116,14 @@ namespace RallySharp.Engine
                 if (projection.Y > this.ClientRectangle.Height) return;
 
                 // yes it is
-                bufferedGraphics.Graphics.DrawImage(Resources.SpriteSheet[0], projection, Resources.SpriteSheetRectCache[0][sprite.CurrentAnimationFrame], GraphicsUnit.Pixel);
-                bufferedGraphics.Graphics.DrawRectangle(sprite.Collided ? Pens.Yellow : Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
+                bufferedGraphics.Graphics.DrawImage(Resources.SpriteSheet[0], projection, frame, GraphicsUnit.Pixel);
+                bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
             }
 
             ///
             ///
             ///
-            bufferedGraphics.Graphics.DrawString($"Current={stage.MainSprite.Pos}", this.Font, Brushes.White, 32, 32);
+            bufferedGraphics.Graphics.DrawString($"Current={stage.MainSprite.Pos} Direction={stage.MainSprite.Direction} Animation={stage.MainSprite.Animation}", this.Font, Brushes.White, 32, 32);
 
             this.Invalidate();
         }
