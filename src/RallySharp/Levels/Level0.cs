@@ -38,6 +38,7 @@ namespace RallySharp.Levels
 
         private void Running()
         {
+            // updating mainSprite
             if (Fire.Triggered())
             {
                 mainSprite.NewDirection();
@@ -62,9 +63,14 @@ namespace RallySharp.Levels
             {
                 mainSprite.NewDirection();
             }
+            mainSprite.Update();
 
-            foreach (var sprite in sprites)
+            // update all other enemies
+            for (var i = 1; i < sprites.Count; i++)
             {
+                var sprite = sprites[i];
+                var distance = mainSprite.Pos - sprite.Pos;
+                sprite.Direction = distance.Direction;
                 sprite.Update();
             }
         }
@@ -80,8 +86,11 @@ namespace RallySharp.Levels
                 }
                 mainSprite.Direction = 0;
             }
-            foreach (var sprite in sprites)
+
+            mainSprite.Update();
+            for (var i = 1; i<sprites.Count; i++)
             {
+                var sprite = sprites[i];
                 sprite.Update();
             }
         }
