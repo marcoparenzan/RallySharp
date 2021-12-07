@@ -2,31 +2,35 @@
 using System;
 using System.Collections.Generic;
 
-
 namespace RallySharp.Levels
 {
     public class Level0
     {
         public Level0()
         {
-            mainSprite = new Sprite { Id=0, Pos = (480, 1272), Animation = new(0) }.Ready();
+            mainSprite = new MainSprite { Id=0, Pos = (480, 1272), Animation = new(0) };
+            mainSprite.Ready();
             sprites = new();
             sprites.Add(mainSprite);
-            sprites.Add(new Sprite { Id = 1, Pos = (480, 1272 + 24 * 4), Animation = new(12) }.Ready());
-            //sprites.Add(new Sprite { Id = 2, Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12) }.Ready());
-            //sprites.Add(new Sprite { Id = 3, Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12) }.Ready());
-            //sprites.Add(new Sprite { Id = 4, Pos = (480 - 96, 1272 + 24 * 4), Animation = new(12) }.Ready());
-            //sprites.Add(new Sprite { Id = 5, Pos = (480 + 96, 1272 + 24 * 4), Animation = new(12) }.Ready());
+            var enemy = new EnemySprite { Id = 1, Pos = (480, 1272 + 24 * 4), Animation = new(12), MainSprite = mainSprite };
+            enemy.Ready();
+            sprites.Add(enemy);
+            enemy = new EnemySprite { Id = 2, Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12), MainSprite = mainSprite };
+            enemy.Ready();
+            sprites.Add(enemy);
+            enemy = new EnemySprite { Id = 3, Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = mainSprite };
+            enemy.Ready();
+            sprites.Add(enemy);
             Update = Ready;
         }
 
         public int Index { get => 0; }
 
-        readonly Sprite mainSprite;
+        readonly MainSprite mainSprite;
 
         readonly List<Sprite> sprites;
 
-        public Sprite MainSprite => mainSprite;
+        public MainSprite MainSprite => mainSprite;
 
         public IEnumerable<Sprite> Sprites => sprites;
 
@@ -69,8 +73,6 @@ namespace RallySharp.Levels
             for (var i = 1; i < sprites.Count; i++)
             {
                 var sprite = sprites[i];
-                var distance = mainSprite.Pos - sprite.Pos;
-                sprite.Direction = distance.Direction;
                 sprite.Update();
             }
         }

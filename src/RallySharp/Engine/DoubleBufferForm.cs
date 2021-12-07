@@ -99,8 +99,8 @@ namespace RallySharp.Engine
                 {
                     var tileId = selected_tilesheet[offset_row++] - 1;
                     var rect = new RectangleF(xp, yp, Resources.TileWidth, Resources.TileHeight);
-                    // bufferedGraphics.Graphics.DrawImage(selected_tileset, rect, selected_tilerects[tileId], GraphicsUnit.Pixel);
-                    bufferedGraphics.Graphics.FillRectangle(tileId == 1 ? Brushes.Blue : Brushes.Black, rect);
+                    bufferedGraphics.Graphics.DrawImage(selected_tileset, rect, selected_tilerects[tileId], GraphicsUnit.Pixel);
+                    // bufferedGraphics.Graphics.FillRectangle(tileId == 1 ? Brushes.Blue : Brushes.Black, rect);
                     xp += Resources.TileWidth;
                 }
                 offset_i += (int)Resources.Width;
@@ -125,8 +125,8 @@ namespace RallySharp.Engine
                 if (projection.X > this.ClientRectangle.Width - Resources.TileWidth) continue;
                 if (projection.Y > this.ClientRectangle.Height - Resources.TileHeight) continue;
 
-                // bufferedGraphics.Graphics.DrawImage(selected_spritesheet, projection, frame, GraphicsUnit.Pixel);
-                bufferedGraphics.Graphics.FillRectangle(Brushes.Red, projection);
+                bufferedGraphics.Graphics.DrawImage(selected_spritesheet, projection, frame, GraphicsUnit.Pixel);
+                // bufferedGraphics.Graphics.FillRectangle(Brushes.Red, projection);
                 bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
 
                 //Debug.WriteLine($"{sprite.Id}//{projection}//{sprite.Direction}//({focus_x},{focus_y})");

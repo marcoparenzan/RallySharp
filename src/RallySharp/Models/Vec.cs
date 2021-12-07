@@ -91,34 +91,5 @@ namespace RallySharp.Models
         }
 
         public override string ToString() => $"({X},{Y})";
-
-        public byte Direction
-        {
-            get
-            {
-                if (X >= 0)
-                {
-                    if (Y >= 0)
-                    {
-                        return (byte) ((X > Y) ? 1 : 2);
-                    }
-                    else
-                    {
-                        return (byte)((X > -Y) ? 1 : 0);
-                    }
-                }
-                else
-                {
-                    if (Y >= 0)
-                    {
-                        return (byte)((X < -Y) ? 3 : 0);
-                    }
-                    else
-                    {
-                        return (byte)((X < Y) ? 3 : 2);
-                    }
-                }
-            }
-        }
     }
 }
