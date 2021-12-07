@@ -12,6 +12,11 @@ namespace RallySharp.Levels
             mainSprite = new MainSprite { Pos = (480, 1272) };
             sprites = new();
             sprites.Add(mainSprite);
+            sprites.Add(new Sprite { Pos = (480, 1272 + 24 * 4), Animation = new(12) });
+            //sprites.Add(new Sprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12) });
+            //sprites.Add(new Sprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12) });
+            //sprites.Add(new Sprite { Pos = (480 - 96, 1272 + 24 * 4), Animation = new(12) });
+            //sprites.Add(new Sprite { Pos = (480 + 96, 1272 + 24 * 4), Animation = new(12) });
             Update = Ready;
         }
 

@@ -45,10 +45,8 @@ namespace RallySharp.Engine
             if (this.bufferedGraphics == null)
             {
                 this.bufferedGraphics = BufferedGraphicsManager.Current.Allocate(e.Graphics,
-                    //new Rectangle(Resources.TileWidth, Resources.TileHeight, this.ClientRectangle.Width - Resources.TileWidth * 2, this.ClientRectangle.Height - Resources.TileHeight * 2)
-                    this.ClientRectangle
+                    new Rectangle(Resources.TileWidth, Resources.TileHeight, this.ClientRectangle.Width - Resources.TileWidth * 2, this.ClientRectangle.Height - Resources.TileHeight * 2)
                 );
-
                 this.Suspended = false;
             }
             else
@@ -114,18 +112,25 @@ namespace RallySharp.Engine
 
             foreach (var sprite in stage.Sprites)
             {
-                var frame = selected_spriterects[sprite.Animation.CurrentFrame];
-                var projection = new RectangleF(sprite.Pos.X - focus_x, sprite.Pos.Y - focus_y, frame.Width - 1, frame.Height - 1);
+                try
+                {
+                    var frame = selected_spriterects[sprite.Animation.CurrentFrame];
+                    var projection = new RectangleF(sprite.Pos.X - focus_x, sprite.Pos.Y - focus_y, frame.Width - 1, frame.Height - 1);
 
-                // check if enemy is visible
-                if (projection.X < 0) return;
-                if (projection.Y < 0) return;
-                if (projection.X > this.ClientRectangle.Width) return;
-                if (projection.Y > this.ClientRectangle.Height) return;
+                    // check if enemy is visible
+                    if (projection.X < 0) return;
+                    if (projection.Y < 0) return;
+                    if (projection.X + 24 > this.ClientRectangle.Width) return;
+                    if (projection.Y + 24 > this.ClientRectangle.Height) return;
 
-                // yes it is
-                bufferedGraphics.Graphics.DrawImage(selected_spritesheet, projection, frame, GraphicsUnit.Pixel);
-                bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
+                    // yes it is
+                    //bufferedGraphics.Graphics.DrawImage(selected_spritesheet, projection, frame, GraphicsUnit.Pixel);
+                    //bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
+                    Console.WriteLine(projection);
+                }
+                catch (Exception ex)
+                { 
+                }
             }
 
             ///
