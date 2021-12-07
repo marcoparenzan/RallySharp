@@ -9,24 +9,24 @@ namespace RallySharp.Levels
     {
         public Level0()
         {
-            mainSprite = new MainSprite { Pos = (480, 1272) };
+            mainSprite = new Sprite { Id=0, Pos = (480, 1272), Animation = new(0) }.Ready();
             sprites = new();
             sprites.Add(mainSprite);
-            sprites.Add(new Sprite { Pos = (480, 1272 + 24 * 4), Animation = new(12) });
-            //sprites.Add(new Sprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12) });
-            //sprites.Add(new Sprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12) });
-            //sprites.Add(new Sprite { Pos = (480 - 96, 1272 + 24 * 4), Animation = new(12) });
-            //sprites.Add(new Sprite { Pos = (480 + 96, 1272 + 24 * 4), Animation = new(12) });
+            sprites.Add(new Sprite { Id = 1, Pos = (480, 1272 + 24 * 4), Animation = new(12) }.Ready());
+            //sprites.Add(new Sprite { Id = 2, Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12) }.Ready());
+            //sprites.Add(new Sprite { Id = 3, Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12) }.Ready());
+            //sprites.Add(new Sprite { Id = 4, Pos = (480 - 96, 1272 + 24 * 4), Animation = new(12) }.Ready());
+            //sprites.Add(new Sprite { Id = 5, Pos = (480 + 96, 1272 + 24 * 4), Animation = new(12) }.Ready());
             Update = Ready;
         }
 
         public int Index { get => 0; }
 
-        readonly MainSprite mainSprite;
+        readonly Sprite mainSprite;
 
         readonly List<Sprite> sprites;
 
-        public MainSprite MainSprite => mainSprite;
+        public Sprite MainSprite => mainSprite;
 
         public IEnumerable<Sprite> Sprites => sprites;
 

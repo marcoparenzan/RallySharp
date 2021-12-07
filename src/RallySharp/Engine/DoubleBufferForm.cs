@@ -1,6 +1,7 @@
 ﻿using RallySharp.Levels;
 using RallySharp.Models;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -12,14 +13,13 @@ namespace RallySharp.Engine
         {
             this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            this.Font = new Font("C64 Pro Mono Normale", 12);
         }
 
         BufferedGraphics bufferedGraphics;
 
         public DoubleBufferForm Initialize()
         {
-            this.ClientSize = new Size((int)((Resources.Width + 1) * Resources.TileWidth), (int)((Resources.Height + 1) * Resources.TileHeight));
+            this.ClientSize = new Size((int)((Resources.Width) * Resources.TileWidth), (int)((Resources.Height) * Resources.TileHeight));
             return this;
         }
 
@@ -63,8 +63,8 @@ namespace RallySharp.Engine
             //
             //
 
-            var focus_x = focus.Pos.X - (int)(this.ClientRectangle.Width / 2); if (focus_x < 0) focus_x = 0;
-            var focus_y = focus.Pos.Y - (int)(this.ClientRectangle.Height / 2); if (focus_y < 0) focus_y = 0;
+            var focus_x = focus.Pos.X - (int)(this.ClientRectangle.Width / 2); if (focus_x < Resources.TileWidth) focus_x = Resources.TileWidth;
+            var focus_y = focus.Pos.Y - (int)(this.ClientRectangle.Height / 2); if (focus_y < Resources.TileHeight) focus_y = Resources.TileHeight;
 
             //
             // render world
@@ -75,9 +75,12 @@ namespace RallySharp.Engine
             var viewport_width = (int)(this.ClientRectangle.Width / Resources.TileWidth);
 
             // the x,y converted to offset in the map
-            var offset_y = (int)(Math.Max(focus_y, 0) / Resources.TileHeight); var ym = focus_y % Resources.TileHeight;
+            var offset_y = (int)(Math.Max(focus_y, 0) / Resources.TileHeight); 
+            var ym = focus_y % Resources.TileHeight;
             if (ym > 0) { offset_y++; ym = Resources.TileHeight - ym; }
-            var offset_x = (int)(Math.Max(focus_x, 0) / Resources.TileWidth); var xm = focus_x % Resources.TileWidth;
+
+            var offset_x = (int)(Math.Max(focus_x, 0) / Resources.TileWidth); 
+            var xm = focus_x % Resources.TileWidth;
             if (xm > 0) { offset_x++; xm = Resources.TileWidth - xm; }
 
             // render
@@ -97,6 +100,7 @@ namespace RallySharp.Engine
                     var tileId = selected_tilesheet[offset_row++] - 1;
                     var rect = new RectangleF(xp, yp, Resources.TileWidth, Resources.TileHeight);
                     bufferedGraphics.Graphics.DrawImage(selected_tileset, rect, selected_tilerects[tileId], GraphicsUnit.Pixel);
+                    //bufferedGraphics.Graphics.FillRectangle(tileId == 1 ? Brushes.Blue : Brushes.Black, rect);
                     xp += Resources.TileWidth;
                 }
                 offset_i += (int)Resources.Width;
@@ -112,25 +116,20 @@ namespace RallySharp.Engine
 
             foreach (var sprite in stage.Sprites)
             {
-                try
-                {
-                    var frame = selected_spriterects[sprite.Animation.CurrentFrame];
-                    var projection = new RectangleF(sprite.Pos.X - focus_x, sprite.Pos.Y - focus_y, frame.Width - 1, frame.Height - 1);
+                var frame = selected_spriterects[sprite.Animation.CurrentFrame];
+                var projection = new RectangleF(sprite.Pos.X - focus_x, sprite.Pos.Y - focus_y, frame.Width - 1, frame.Height - 1);
 
-                    // check if enemy is visible
-                    if (projection.X < 0) return;
-                    if (projection.Y < 0) return;
-                    if (projection.X + 24 > this.ClientRectangle.Width) return;
-                    if (projection.Y + 24 > this.ClientRectangle.Height) return;
+                // check if enemy is visible
+                if (projection.X < 0) continue;
+                if (projection.Y < 0) continue;
+                if (projection.X > this.ClientRectangle.Width - Resources.TileWidth) continue;
+                if (projection.Y > this.ClientRectangle.Height - Resources.TileHeight) continue;
 
-                    // yes it is
-                    //bufferedGraphics.Graphics.DrawImage(selected_spritesheet, projection, frame, GraphicsUnit.Pixel);
-                    //bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
-                    Console.WriteLine(projection);
-                }
-                catch (Exception ex)
-                { 
-                }
+                bufferedGraphics.Graphics.DrawImage(selected_spritesheet, projection, frame, GraphicsUnit.Pixel);
+                //bufferedGraphics.Graphics.FillRectangle(Brushes.Red, projection);
+                bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
+
+                //Debug.WriteLine($"{sprite.Id}//{projection}//{sprite.Direction}//({focus_x},{focus_y})");
             }
 
             ///

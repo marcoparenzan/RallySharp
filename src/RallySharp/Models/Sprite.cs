@@ -11,12 +11,7 @@ namespace RallySharp.Models
     {
         protected readonly static Vec[] Speed = { (0, -6), (6, 0), (0, 6), (-6, 0) };
 
-        public Sprite()
-        {
-            this.Animation = new(12);
-            Ready();
-        }
-
+        public byte Id { get; set; }
         public Vec Pos { get; set; }
         public int Direction { get; set; }
 
@@ -87,16 +82,22 @@ namespace RallySharp.Models
         {
         }
 
+        //
+        //  update lambdas
+        //
+
         public Action Update { get; private set; }
 
-        public void Running()
+        public Sprite Running()
         {
             Update = UpdateRunning;
+            return this;
         }
 
-        public void Ready()
+        public Sprite Ready()
         {
             Update = UpdateReady;
+            return this;
         }
     }
 }
