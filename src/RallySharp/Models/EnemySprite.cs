@@ -64,27 +64,27 @@ namespace RallySharp.Models
                 var nextPos = Pos + Speed[newDirection.Value];
                 if (newDirection == 0)
                 {
-                    yt = (int)((nextPos.Y) / Resources.TileHeight);
-                    xt = (int)((nextPos.X) / Resources.TileWidth);
+                    yt = (int)((nextPos.Y) / Tilesheet.Height);
+                    xt = (int)((nextPos.X) / Tilesheet.Width);
                 }
                 else if (newDirection == 1)
                 {
-                    yt = (int)((nextPos.Y) / Resources.TileHeight);
-                    xt = (int)((nextPos.X + Resources.TileWidth - 1) / Resources.TileWidth);
+                    yt = (int)((nextPos.Y) / Tilesheet.Height);
+                    xt = (int)((nextPos.X + Tilesheet.Width - 1) / Tilesheet.Width);
                 }
                 else if (newDirection == 2)
                 {
-                    yt = (int)((nextPos.Y + Resources.TileHeight - 1) / Resources.TileHeight);
-                    xt = (int)((nextPos.X) / Resources.TileWidth);
+                    yt = (int)((nextPos.Y + Tilesheet.Height - 1) / Tilesheet.Height);
+                    xt = (int)((nextPos.X) / Tilesheet.Width);
                 }
                 else if (newDirection == 3)
                 {
-                    yt = (int)((nextPos.Y) / Resources.TileHeight);
-                    xt = (int)((nextPos.X) / Resources.TileWidth);
+                    yt = (int)((nextPos.Y) / Tilesheet.Height);
+                    xt = (int)((nextPos.X) / Tilesheet.Width);
                 }
 
-                var offset = (int)(yt * Resources.Width + xt);
-                var tileId = Resources.Tiles[0][offset];
+                var offset = (int)(yt * Tilemap.Width + xt);
+                var tileId = Tilemap.Data[0][offset];
 
                 if (tileId != 2)
                 {

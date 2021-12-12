@@ -21,6 +21,8 @@ namespace RallySharp.Levels
             enemy = new EnemySprite { Id = 3, Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = mainSprite };
             enemy.Ready();
             sprites.Add(enemy);
+
+            // Ready
             Update = Ready;
         }
 
