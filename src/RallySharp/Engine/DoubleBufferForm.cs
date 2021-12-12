@@ -116,7 +116,7 @@ namespace RallySharp.Engine
 
             foreach (var sprite in stage.Sprites)
             {
-                var projection = new RectangleF(sprite.Pos.X - focus_x, sprite.Pos.Y - focus_y, Spritesheet.Width, Spritesheet.Height);
+                var projection = new RectangleF(sprite.Pos.X - focus_x, sprite.Pos.Y - focus_y, Tilesheet.Width, Tilesheet.Height);
 
                 // check if enemy is visible
                 if (projection.X < 0) continue;
