@@ -19,7 +19,11 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
-
+    <script>
+        window.setFocusToElement = (element) => {
+            element.focus();
+        };
+    </script>
     <script>
         window.getWindowDimensions = function () {
             return {
@@ -32,19 +36,18 @@
         window.setImage = function (id, base64content) {
             const img = document.createElement("img");
             img.id = id;
+            img.style = "visibility:hidden;";
             img.src = "data:image/png;base64," + base64content;
             document.body.appendChild(img);
             return true;
         };
     </script>
-
     <script>
         window.setArray = function (id, array) {
             window[id] = array;
             return true;
         };
     </script>
-
     <script>
         window.renderFrame = (level) => {
             var cnvss = document.getElementsByTagName("canvas");
@@ -75,33 +78,32 @@
             //
 
             // how many rects in the viewport
-            var viewport_height = Math.round(960 / 24, 0);
-            var viewport_width = Math.round(640 / 24, 0);
+            var viewport_width = Math.floor(640 / 24, 0);
+            var viewport_height = Math.floor(960 / 24, 0);
 
             // the x,y converted to offset in the map
-            var offset_y = Math.round(Math.max(focus_y, 0) / 24, 0);
+            var offset_y = Math.floor(Math.max(focus_y, 0) / 24, 0);
             var ym = focus_y % 24;
             if (ym > 0) { offset_y++; ym = 24 - ym; }
 
-            var offset_x = Math.round(Math.max(focus_x, 0) / 24, 0);
+            var offset_x = Math.floor(Math.max(focus_x, 0) / 24, 0);
             var xm = focus_x % 24;
             if (xm > 0) { offset_x++; xm = 24 - xm; }
 
             // render
 
-            var offset_i = Math.round(offset_y * 24 + offset_x, 0);
+            var offset_i = Math.floor(offset_y * 42 + offset_x, 0);
             var yp = ym;
-            debugger;
             for (var y = offset_y; y < Math.min(offset_y + viewport_height, 64); y++) {
                 var offset_row = offset_i;
                 var xp = xm;
                 for (var x = offset_x; x < Math.min(offset_x + viewport_width, 42); x++) {
                     var tileId = selected_tilemap[offset_row++] - 1;
                     var rect = selected_tilesheetrects[tileId];
-                    ctx.drawImage(selected_tilesheet, xp, yp, rect.width, rect.height, rect.x, rect.y, rect.width, rect.height);
+                    ctx.drawImage(selected_tilesheet, rect.x, rect.y, rect.width, rect.height, xp, yp, rect.width, rect.height);
                     xp += 24;
                 }
-                offset_i += 24;
+                offset_i += 42;
                 yp += 24;
             }
 
@@ -121,13 +123,13 @@
                 if (projection.y > 960 - 24) continue;
 
                 var rect = selected_spritesheetrects[sprite.currentFrame];
-                ctx.drawImage(selected_spritesheet, projection.x, projection.y, projection.width, projection.height, rect.x, rect.y, rect.width, rect.height);
+                ctx.drawImage(selected_spritesheet, rect.x, rect.y, rect.width, rect.height, projection.x, projection.y, projection.w, projection.h);
             }
 
             ///
             ///
             ///
-            //form.CurrentGraphics.DrawString($"Lives={level.GameState.Lives} Score={level.GameState.Score} FlagScore={level.GameState.FlagScore} Fuel={level.GameState.Fuel} Current={level.MainSprite.Pos} Animation={level.MainSprite.CurrentFrame}", form.Font, Brushes.White, 32, 32);
+            ctx.fillText(`Lives=${level.gameState.lives} Score=${level.gameState.score} FlagScore=${level.gameState.flagScore} Fuel=${level.gameState.fuel} Current=${level.mainSprite.pos} Animation=${level.mainSprite.currentFrame}`, 32, 32);
         }
     </script>
 </body>

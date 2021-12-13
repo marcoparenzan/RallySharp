@@ -4,7 +4,7 @@
 
 @inject IJSRuntime _jsRuntime
 
-<canvas width="640" height="960" style="background-color:yellowgreen;">
+<canvas tabindex="0" width="640" height="960" @onkeydown="HandleKeyDown" @onkeyup="HandleKeyUp" @ref="canvas">
 
 </canvas>
 
@@ -12,6 +12,61 @@
 {
     private Timer timer;
     private Level0 level;
+    private ElementReference canvas;
+
+    void HandleKeyDown(KeyboardEventArgs e) {
+
+        switch (e.Code)
+        {
+            //case "ESC":
+            //    form.Close();
+            //    break;
+            case "ShiftLeft":
+            case "ShiftRight":
+                level.Fire.Set();
+                break;
+            case "ArrowLeft":
+                level.MoveLeft.Set();
+                break;
+            case "ArrowRight":
+                level.MoveRight.Set();
+                break;
+            case "ArrowUp":
+                level.MoveUp.Set();
+                break;
+            case "ArrowDown":
+                level.MoveDown.Set();
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    void HandleKeyUp(KeyboardEventArgs e) {
+
+        switch (e.Code)
+        {
+            case "ShiftLeft":
+            case "ShiftRight":
+                level.Fire.Reset();
+                break;
+            case "ArrowLeft":
+                level.MoveLeft.Reset();
+                break;
+            case "ArrowRight":
+                level.MoveRight.Reset();
+                break;
+            case "ArrowUp":
+                level.MoveUp.Reset();
+                break;
+            case "ArrowDown":
+                level.MoveDown.Reset();
+                break;
+            default:
+                break;
+        }
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -25,26 +80,30 @@
                     }
                 };
 
-            level.GoToRunning();
-
             await _jsRuntime.InvokeAsync<object>("setImage", "spritesheet", Convert.ToBase64String(Spritesheet.data0));
             await _jsRuntime.InvokeAsync<object>("setImage", "tilesheet", Convert.ToBase64String(Tilesheet.data0));
             await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilemap", Tilemap.Data[0]);
             await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilesheetrects", Tilesheet.Rects[0]);
             await _jsRuntime.InvokeAsync<object>("setArray", "selected_spritesheetrects", Spritesheet.Rects[0]);
 
-            await _jsRuntime.InvokeAsync<object>("renderFrame", level);
-            //level.Update();
+            level.GoToReady();
 
+            var frameSetup = 30;
+            var refrate = (int) Math.Round(1000.0 / frameSetup, 0);
+            var framerate = 0;
 
-            //timer = new Timer(async xx =>
-            //{
-            //    await _jsRuntime.InvokeAsync<object>("renderFrame", level);
-            //    level.Update();
-            //}, null, 30, 1000/30);
-        
+            timer = new Timer(async xx =>
+            {
+                var start = DateTime.Now;
 
-            StateHasChanged();
+                await _jsRuntime.InvokeAsync<object>("renderFrame", level);
+                level.Update();
+
+                var stop = DateTime.Now;
+                framerate = (int)Math.Round(1000.0 / (stop - start).TotalMilliseconds, 0);
+            }, null, frameSetup, refrate);
+            
+            await _jsRuntime.InvokeAsync<object>("setFocusToElement", canvas);
         }
     }
 }

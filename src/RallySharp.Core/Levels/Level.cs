@@ -109,7 +109,7 @@ namespace RallySharp.Levels
             }
         }
 
-        private void GoToReady()
+        public void GoToReady()
         {
             Update = Ready;
             foreach (var sprite1 in sprites)

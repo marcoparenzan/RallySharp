@@ -34,7 +34,7 @@ namespace RallySharp.WinForms
             form.StartPosition = FormStartPosition.CenterScreen;
             form.ClientSize = new Size(640, 960);
 
-            void Render()
+            void RenderFrame()
             {
                 form.CurrentGraphics.Clear(Color.Black);
 
@@ -50,8 +50,8 @@ namespace RallySharp.WinForms
                 //
 
                 // how many rects in the viewport
-                var viewport_height = (int)(form.ClientRectangle.Height / Tilesheet.Height);
                 var viewport_width = (int)(form.ClientRectangle.Width / Tilesheet.Width);
+                var viewport_height = (int)(form.ClientRectangle.Height / Tilesheet.Height);
 
                 // the x,y converted to offset in the map
                 var offset_y = (int)(Math.Max(focus_y, 0) / Tilesheet.Height);
@@ -168,7 +168,7 @@ namespace RallySharp.WinForms
             {
                 var start = DateTime.Now;
 
-                Render();
+                RenderFrame();
                 form.Invalidate();
                 level.Update();
 
