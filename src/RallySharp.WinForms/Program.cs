@@ -1,7 +1,7 @@
 using RallySharp.Levels;
-using RallySharp.Models;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace RallySharp.WinForms
@@ -21,19 +21,18 @@ namespace RallySharp.WinForms
                 GameState = gameState
             };
 
-            var selected_tilesheet = Tilemap.Data[level.Index];
-            var selected_tileset = Tilesheet.Bitmaps[level.Index];
-            var selected_tilerects = Tilesheet.Rects[level.Index];
+            var selected_tilemap = Tilemap.Data[level.Index];
+            var selected_tilesheet = new Bitmap(new MemoryStream(Tilesheet.data0));
+            var selected_tilesheetrects = Tilesheet.Rects[level.Index];
 
-            var bitmap = Spritesheet.Bitmaps[level.Index];
-            var rects = Spritesheet.Rects[level.Index];
+            var selected_spritesheet = new Bitmap(new MemoryStream(Spritesheet.data0));
+            var selected_spritesheetrects = Spritesheet.Rects[level.Index];
 
             var form = new DoubleBufferForm((Tilesheet.Width, Tilesheet.Height));
             //form.FormBorderStyle = FormBorderStyle.None;
             //form.WindowState = FormWindowState.Maximized;
             form.StartPosition = FormStartPosition.CenterScreen;
-            form.ClientSize = new Size(960, 640);
-            //form.ClientSize = new Size((int)((Tilemap.Width) * Tilesheet.Width), (int)((Tilemap.Height) * Tilesheet.Height));
+            form.ClientSize = new Size(640, 960);
 
             void Render()
             {
@@ -73,9 +72,9 @@ namespace RallySharp.WinForms
                     var xp = xm;
                     for (var x = offset_x; x < Math.Min(offset_x + viewport_width, Tilemap.Width); x++)
                     {
-                        var tileId = selected_tilesheet[offset_row++] - 1;
+                        var tileId = selected_tilemap[offset_row++] - 1;
                         var rect = new RectangleF(xp, yp, Tilesheet.Width, Tilesheet.Height);
-                        form.CurrentGraphics.DrawImage(selected_tileset, rect, selected_tilerects[tileId], GraphicsUnit.Pixel);
+                        form.CurrentGraphics.DrawImage(selected_tilesheet, rect, selected_tilesheetrects[tileId], GraphicsUnit.Pixel);
                         // bufferedGraphics.Graphics.FillRectangle(tileId == 1 ? Brushes.Blue : Brushes.Black, rect);
                         xp += Tilesheet.Width;
                     }
@@ -97,7 +96,7 @@ namespace RallySharp.WinForms
                     if (projection.X > form.ClientRectangle.Width - Tilesheet.Width) continue;
                     if (projection.Y > form.ClientRectangle.Height - Tilesheet.Height) continue;
 
-                    form.CurrentGraphics.DrawImage(bitmap, projection, rects[sprite.CurrentFrame], GraphicsUnit.Pixel);
+                    form.CurrentGraphics.DrawImage(selected_spritesheet, projection, selected_spritesheetrects[sprite.CurrentFrame], GraphicsUnit.Pixel);
                     // bufferedGraphics.Graphics.FillRectangle(Brushes.Red, projection);
                     //bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
                 }

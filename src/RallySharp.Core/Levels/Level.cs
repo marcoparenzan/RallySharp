@@ -1,6 +1,7 @@
 ﻿using RallySharp.Models;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace RallySharp.Levels
 {
@@ -108,9 +109,27 @@ namespace RallySharp.Levels
             }
         }
 
+        private void GoToReady()
+        {
+            Update = Ready;
+            foreach (var sprite1 in sprites)
+            {
+                sprite1.Ready();
+            }
+        }
+
+        public void GoToRunning()
+        {
+            Update = Running;
+            foreach (var sprite1 in sprites)
+            {
+                sprite1.Running();
+            }
+        }
+
+
         private void GoToCrashed()
         {
-            MainSprite.Crashed();
             Update = Crashed;
             foreach (var sprite1 in sprites)
             {
@@ -120,7 +139,6 @@ namespace RallySharp.Levels
 
         private void GoToFinished()
         {
-            MainSprite.Finished();
             Update = Finished;
             foreach (var sprite1 in sprites)
             {
@@ -130,7 +148,6 @@ namespace RallySharp.Levels
 
         private void GoToCompleted()
         {
-            MainSprite.Completed();
             Update = Completed;
             foreach (var sprite1 in sprites)
             {
@@ -142,11 +159,7 @@ namespace RallySharp.Levels
         {
             if (Fire.Triggered())
             {
-                Update = Running;
-                foreach (var sprite in sprites)
-                {
-                    sprite.Running();
-                }
+                GoToRunning();
             }
 
             mainSprite.Update();
@@ -187,11 +200,12 @@ namespace RallySharp.Levels
             }
         }
 
+        [JsonIgnore]
         public Action Update { get; private set; }
 
         static Random rnd = new Random();
 
-        protected void RandomPlace<TSprite>(int count)
+        protected void AddRandom<TSprite>(int count)
             where TSprite : Sprite
         {
             var i = 0;

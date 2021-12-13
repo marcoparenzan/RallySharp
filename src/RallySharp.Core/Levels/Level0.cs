@@ -12,8 +12,8 @@ namespace RallySharp.Levels
             Add(new EnemySprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
             Add(new EnemySprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
 
-            RandomPlace<FlagSprite>(10);
-            RandomPlace<RockSprite>(5);
+            AddRandom<FlagSprite>(10);
+            AddRandom<RockSprite>(5);
         }
 
         public override int Index => 0;

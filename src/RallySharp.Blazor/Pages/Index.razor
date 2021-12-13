@@ -1,0 +1,50 @@
+﻿@page "/"
+@using RallySharp.Levels
+@using System.Threading
+
+@inject IJSRuntime _jsRuntime
+
+<canvas width="640" height="960" style="background-color:yellowgreen;">
+
+</canvas>
+
+@code
+{
+    private Timer timer;
+    private Level0 level;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            level = new Level0
+                {
+                    GameState = new GameState
+                    {
+
+                    }
+                };
+
+            level.GoToRunning();
+
+            await _jsRuntime.InvokeAsync<object>("setImage", "spritesheet", Convert.ToBase64String(Spritesheet.data0));
+            await _jsRuntime.InvokeAsync<object>("setImage", "tilesheet", Convert.ToBase64String(Tilesheet.data0));
+            await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilemap", Tilemap.Data[0]);
+            await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilesheetrects", Tilesheet.Rects[0]);
+            await _jsRuntime.InvokeAsync<object>("setArray", "selected_spritesheetrects", Spritesheet.Rects[0]);
+
+            await _jsRuntime.InvokeAsync<object>("renderFrame", level);
+            //level.Update();
+
+
+            //timer = new Timer(async xx =>
+            //{
+            //    await _jsRuntime.InvokeAsync<object>("renderFrame", level);
+            //    level.Update();
+            //}, null, 30, 1000/30);
+        
+
+            StateHasChanged();
+        }
+    }
+}

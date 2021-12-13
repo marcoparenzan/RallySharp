@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RallySharp.Models
@@ -34,6 +35,7 @@ namespace RallySharp.Models
         {
         }
 
+        [JsonIgnore]
         public Action Update { get; protected set; }
 
         public Sprite Running()
