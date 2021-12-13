@@ -13,15 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Models\Bugs1005.slc" />
-    <None Remove="Models\car-spritesheet - Copy.png" />
-    <None Remove="Models\car-spritesheet.png" />
-    <None Remove="Models\Level1.json" />
-    <None Remove="Models\Level1.png-tileset.png" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <ProjectReference Include="..\RallySharp.Core\RallySharp.Core.csproj" />
   </ItemGroup>
 
 </Project>

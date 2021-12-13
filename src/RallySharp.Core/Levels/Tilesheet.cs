@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RallySharp.Levels
 {
-    static class Tilesheet
+    public static class Tilesheet
     {
         public const byte Width = 24;
         public const byte Height = 24;

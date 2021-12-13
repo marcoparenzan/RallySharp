@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RallySharp.Levels
 {
-    static class Spritesheet
+    public static class Spritesheet
     {
         public const byte Width = 64;
         public const byte Height = 64;
