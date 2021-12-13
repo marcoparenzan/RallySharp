@@ -9,21 +9,27 @@ namespace RallySharp.Models
 {
     public class MainSprite: Sprite
     {
-        int? newDirection;
+        public CarAnimation Animation { get; set; }
 
-        public void NewDirection(int? value = null) => newDirection = value;
+        public override int CurrentFrame => Animation.CurrentFrame;
+
+        byte direction;
+
+        byte? newDirection;
+
+        public void NewDirection(byte? value = null) => newDirection = value;
 
         protected override void UpdateRunning()
         {
-            newDirection ??= Direction;
-            var rotation = 0;
+            newDirection ??= direction;
+            byte rotation = 0;
 
             while (true)
             {
                 var xt = 0;
                 var yt = 0;
 
-                var nextPos = Pos + Speed[newDirection.Value];
+                var nextPos = Pos + Vec.Speed[newDirection.Value];
                 if (newDirection == 0)
                 {
                     yt = (int)((nextPos.Y) / Tilesheet.Height);
@@ -50,11 +56,11 @@ namespace RallySharp.Models
 
                 if (tileId != 2)
                 {
-                    newDirection = (newDirection + (++rotation)) % 4; // increased rotation to make 90/180/270
+                    newDirection = (byte) ((newDirection + (++rotation)) % 4); // increased rotation to make 90/180/270
                 }
                 else
                 {
-                    if (newDirection == Direction)
+                    if (newDirection == direction)
                     {
                         Animation.Update();
                     }
@@ -63,11 +69,23 @@ namespace RallySharp.Models
                         Animation.NewDirection(newDirection.Value, (rotation == 2) ? -1 : 1);
                     }
                     Pos = nextPos;
-                    Direction = newDirection.Value;
+                    direction = newDirection.Value;
                     newDirection = null; // reset so does not loop
                     break;
                 }
             }
+        }
+
+        protected override void UpdateCrashed()
+        {
+            if (Animation.CurrentFrame != 48) Animation.Crashed();
+        }
+
+        public bool CollidesWith(Sprite that)
+        {
+            var dx = Math.Abs(that.Pos.X - this.Pos.X);
+            var dy = Math.Abs(that.Pos.Y - this.Pos.Y);
+            return (dx < Tilesheet.Width) && (dy < Tilesheet.Height);
         }
     }
 }

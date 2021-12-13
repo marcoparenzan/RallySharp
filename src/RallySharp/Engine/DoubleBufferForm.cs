@@ -55,7 +55,7 @@ namespace RallySharp.Engine
             }
         }
 
-        public void Render(Level0 stage, Sprite focus)
+        public void Render(Level0 level, Sprite focus)
         {
             bufferedGraphics.Graphics.Clear(Color.Black);
 
@@ -85,9 +85,9 @@ namespace RallySharp.Engine
 
             // render
 
-            var selected_tilesheet = Tilemap.Data[stage.Index];
-            var selected_tileset = Tilesheet.Bitmaps[stage.Index];
-            var selected_tilerects = Tilesheet.Rects[stage.Index];
+            var selected_tilesheet = Tilemap.Data[level.Index];
+            var selected_tileset = Tilesheet.Bitmaps[level.Index];
+            var selected_tilerects = Tilesheet.Rects[level.Index];
 
             var offset_i = (int)(offset_y * Tilemap.Width + offset_x);
             var yp = ym;
@@ -111,10 +111,10 @@ namespace RallySharp.Engine
             // render sprites
             //
 
-            var bitmap = Spritesheet.Bitmaps[stage.Index];
-            var rects = Spritesheet.Rects[stage.Index];
+            var bitmap = Spritesheet.Bitmaps[level.Index];
+            var rects = Spritesheet.Rects[level.Index];
 
-            foreach (var sprite in stage.Sprites)
+            foreach (var sprite in level.Sprites)
             {
                 var projection = new RectangleF(sprite.Pos.X - focus_x, sprite.Pos.Y - focus_y, Tilesheet.Width, Tilesheet.Height);
 
@@ -124,9 +124,9 @@ namespace RallySharp.Engine
                 if (projection.X > this.ClientRectangle.Width - Tilesheet.Width) continue;
                 if (projection.Y > this.ClientRectangle.Height - Tilesheet.Height) continue;
 
-                bufferedGraphics.Graphics.DrawImage(bitmap, projection, rects[sprite.Animation.CurrentFrame], GraphicsUnit.Pixel);
+                bufferedGraphics.Graphics.DrawImage(bitmap, projection, rects[sprite.CurrentFrame], GraphicsUnit.Pixel);
                 // bufferedGraphics.Graphics.FillRectangle(Brushes.Red, projection);
-                bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
+                //bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
 
                 //Debug.WriteLine($"{sprite.Id}//{projection}//{sprite.Direction}//({focus_x},{focus_y})");
             }
@@ -134,7 +134,7 @@ namespace RallySharp.Engine
             ///
             ///
             ///
-            bufferedGraphics.Graphics.DrawString($"Current={stage.MainSprite.Pos} Direction={stage.MainSprite.Direction} Animation={stage.MainSprite.Animation}", this.Font, Brushes.White, 32, 32);
+            bufferedGraphics.Graphics.DrawString($"Lives={level.GameState.Lives} Score={level.GameState.Score} FlagScore={level.GameState.FlagScore} Fuel={level.GameState.Fuel} Current={level.MainSprite.Pos} Animation={level.MainSprite.CurrentFrame}", this.Font, Brushes.White, 32, 32);
 
             this.Invalidate();
         }

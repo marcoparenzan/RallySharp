@@ -16,7 +16,11 @@ namespace RallySharp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var stage = new Level0();
+            var gameState = new GameState();
+            var level = new Level0
+            {
+                GameState = gameState
+            };
 
             var form =
                 new DoubleBufferForm()
@@ -34,19 +38,19 @@ namespace RallySharp
                         form.Close();
                         break;
                     case Keys.Space:
-                        stage.Fire.Set();
+                        level.Fire.Set();
                         break;
                     case Keys.Left:
-                        stage.MoveLeft.Set();
+                        level.MoveLeft.Set();
                         break;
                     case Keys.Right:
-                        stage.MoveRight.Set();
+                        level.MoveRight.Set();
                         break;
                     case Keys.Up:
-                        stage.MoveUp.Set();
+                        level.MoveUp.Set();
                         break;
                     case Keys.Down:
-                        stage.MoveDown.Set();
+                        level.MoveDown.Set();
                         break;
                     default:
                         break;
@@ -58,19 +62,19 @@ namespace RallySharp
                 switch (e.KeyCode)
                 {
                     case Keys.Space:
-                        stage.Fire.Reset();
+                        level.Fire.Reset();
                         break;
                     case Keys.Left:
-                        stage.MoveLeft.Reset();
+                        level.MoveLeft.Reset();
                         break;
                     case Keys.Right:
-                        stage.MoveRight.Reset();
+                        level.MoveRight.Reset();
                         break;
                     case Keys.Up:
-                        stage.MoveUp.Reset();
+                        level.MoveUp.Reset();
                         break;
                     case Keys.Down:
-                        stage.MoveDown.Reset();
+                        level.MoveDown.Reset();
                         break;
                     default:
                         break;
@@ -87,8 +91,8 @@ namespace RallySharp
             {
                 var start = DateTime.Now;
 
-                form.Render(stage, stage.MainSprite);
-                stage.Update();
+                form.Render(level, level.MainSprite);
+                level.Update();
 
                 var stop = DateTime.Now;
                 form.FrameRate = (int)Math.Round(1000.0 / (stop - start).TotalMilliseconds, 0);

@@ -9,6 +9,12 @@ namespace RallySharp.Models
 {
     public class EnemySprite: Sprite
     {
+        public CarAnimation Animation { get; set; }
+
+        public override int CurrentFrame => Animation.CurrentFrame;
+
+        byte direction;
+
         public Sprite MainSprite { get; set; }
 
         byte[][] tentative_sets = new byte[][]
@@ -25,7 +31,7 @@ namespace RallySharp.Models
 
         protected override void UpdateRunning()
         {
-            int? newDirection;
+            byte? newDirection;
             var tentative_set_idx = 0;
 
             var offsetMain = MainSprite.Pos - this.Pos;
@@ -61,7 +67,7 @@ namespace RallySharp.Models
 
                 newDirection = tentative_sets[tentative_set_idx][rotation];
 
-                var nextPos = Pos + Speed[newDirection.Value];
+                var nextPos = Pos + Vec.Speed[newDirection.Value];
                 if (newDirection == 0)
                 {
                     yt = (int)((nextPos.Y) / Tilesheet.Height);
@@ -92,7 +98,7 @@ namespace RallySharp.Models
                 }
                 else
                 {
-                    if (newDirection == Direction)
+                    if (newDirection == direction)
                     {
                         Animation.Update();
                     }
@@ -101,7 +107,7 @@ namespace RallySharp.Models
                         Animation.NewDirection(newDirection.Value, (rotation == 2) ? -1 : 1);
                     }
                     Pos = nextPos;
-                    Direction = newDirection.Value;
+                    direction = newDirection.Value;
                     newDirection = null; // reset so does not loop
                     break;
                 }

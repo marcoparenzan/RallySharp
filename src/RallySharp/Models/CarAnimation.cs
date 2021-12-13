@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RallySharp.Models
 {
-    public class Animation
+    public class CarAnimation
     {
         int baseFrame;
         int frameLength;
@@ -14,7 +14,7 @@ namespace RallySharp.Models
         int lastFrame;
         int rotation;
 
-        public Animation(int baseFrame = 0, int frameLength = 12)
+        public CarAnimation(int baseFrame = 0, int frameLength = 12)
         {
             this.baseFrame = baseFrame;
             this.frameLength = frameLength;
@@ -22,6 +22,11 @@ namespace RallySharp.Models
         }
 
         public int CurrentFrame => baseFrame + currentFrame;
+
+        public void Crashed()
+        {
+            currentFrame = lastFrame = 48-baseFrame;
+        }
 
         public void NewDirection(int newDirection, int rotation = 1)
         {
@@ -33,8 +38,8 @@ namespace RallySharp.Models
         {
             if (currentFrame != lastFrame)
             {
-                currentFrame = (currentFrame + rotation) % 12;
-                if (currentFrame < 0) currentFrame += 12;
+                currentFrame = (currentFrame + rotation) % frameLength;
+                if (currentFrame < 0) currentFrame += frameLength;
             }
         }
 

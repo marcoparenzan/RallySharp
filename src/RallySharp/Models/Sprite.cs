@@ -9,21 +9,28 @@ namespace RallySharp.Models
 {
     public abstract class Sprite
     {
-        protected readonly static Vec[] Speed = { (0, -6), (6, 0), (0, 6), (-6, 0) };
-
-        public byte Id { get; set; }
         public Vec Pos { get; set; }
-        public int Direction { get; set; }
 
         // animation
-        public Animation Animation { get; set; }
+        public abstract int CurrentFrame { get; }
 
         protected virtual void UpdateRunning()
         {
-            Pos += Speed[Direction];
         }
 
         protected virtual void UpdateReady()
+        {
+        }
+
+        protected virtual void UpdateCrashed()
+        {
+        }
+
+        protected virtual void UpdateCompleted()
+        {
+        }
+
+        protected virtual void UpdateFinished()
         {
         }
 
@@ -38,6 +45,24 @@ namespace RallySharp.Models
         public Sprite Ready()
         {
             Update = UpdateReady;
+            return this;
+        }
+
+        public Sprite Crashed()
+        {
+            Update = UpdateCrashed;
+            return this;
+        }
+
+        public Sprite Finished()
+        {
+            Update = UpdateFinished;
+            return this;
+        }
+
+        public Sprite Completed()
+        {
+            Update = UpdateCompleted;
             return this;
         }
     }

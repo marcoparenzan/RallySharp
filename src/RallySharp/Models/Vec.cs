@@ -8,6 +8,8 @@ namespace RallySharp.Models
 {
     public struct Vec
     {
+        public static Vec[] Speed { get; } = { (0, -6), (6, 0), (0, 6), (-6, 0) };
+
         public float X { get; set; }
         public float Y { get; set; }
 
@@ -63,7 +65,6 @@ namespace RallySharp.Models
             if (a.Y != b.y) return true;
             return false;
         }
-
 
         public static bool operator ==(Vec a, Vec b)
         {
