@@ -15,6 +15,7 @@
 @code
 {
     private Timer timer;
+    private GameState gameState;
     private Stage stage;
     private ElementReference ctrl;
 
@@ -90,7 +91,12 @@
             await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilesheetrects", Tilesheet.Rects);
             await _jsRuntime.InvokeAsync<object>("setArray", "selected_spritesheetrects", Spritesheet.Rects);
 
-            stage.GoToReady();
+            gameState = new GameState();
+            stage = new Stage
+            {
+                GameState = gameState
+            };
+            stage.GoToStart();
 
             var frameSetup = 30;
             var refrate = (int) Math.Round(1000.0 / frameSetup, 0);

@@ -76,6 +76,11 @@ namespace RallySharp.Models
             if (Animation.CurrentFrame != 48) Animation.Crashed();
         }
 
+        protected override void UpdateFinished()
+        {
+            if (Animation.CurrentFrame != 48) Animation.Crashed();
+        }
+
         public bool CollidesWith(Sprite that)
         {
             var dx = Math.Abs(that.Pos.X - this.Pos.X);

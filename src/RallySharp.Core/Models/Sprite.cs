@@ -9,11 +9,15 @@ namespace RallySharp.Models
         // animation
         public abstract int CurrentFrame { get; }
 
-        protected virtual void UpdateRunning()
+        protected virtual void UpdateStart()
         {
         }
 
         protected virtual void UpdateReady()
+        {
+        }
+
+        protected virtual void UpdateRunning()
         {
         }
 
@@ -32,15 +36,21 @@ namespace RallySharp.Models
         [JsonIgnore]
         public Action Update { get; protected set; }
 
-        public Sprite Running()
+        public Sprite Start()
         {
-            Update = UpdateRunning;
+            Update = UpdateStart;
             return this;
         }
 
         public Sprite Ready()
         {
             Update = UpdateReady;
+            return this;
+        }
+
+        public Sprite Running()
+        {
+            Update = UpdateRunning;
             return this;
         }
 

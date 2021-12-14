@@ -8,10 +8,11 @@ namespace RallySharp.Stages
 {
     public class GameState
     {
-        public int Level { get; set; } = 0;
-        public int Fuel { get; set; } = 512;
-        public int Lives { get; set; } = 3;
-        public int Score { get; set; } = 0;
-        public int FlagScore { get; set; } = 100;
+        public int Level { get; set; }
+        public int Fuel { get; set; }
+        public int Lives { get; set; }
+        public int Score { get; set; }
+        public int FlagScore { get; set; }
+        public int Delay { get; set; }
     }
 }

@@ -10,16 +10,10 @@ namespace RallySharp.Stages
         public Stage()
         {
             sprites = new();
-            Add(new MainSprite { Pos = (480, 1272), Animation = new(0) });
-            Add(new EnemySprite { Pos = (480, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
-            Add(new EnemySprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
-            Add(new EnemySprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
 
-            AddRandom<FlagSprite>(10);
-            AddRandom<RockSprite>(5);
+            GameState = new();
 
-            // Ready
-            Update = Ready;
+            GoToStart();
         }
 
         public GameState GameState { get; set; }
@@ -43,7 +37,7 @@ namespace RallySharp.Stages
 
         public IEnumerable<Sprite> Sprites => sprites;
 
-        public ContinuousTrigger Fire { get; } = new ContinuousTrigger();
+        public OneShotTrigger Fire { get; } = new OneShotTrigger();
         public ContinuousTrigger MoveLeft { get; } = new ContinuousTrigger();
         public ContinuousTrigger MoveRight { get; } = new ContinuousTrigger();
         public ContinuousTrigger MoveUp { get; } = new ContinuousTrigger();
@@ -88,15 +82,7 @@ namespace RallySharp.Stages
                 {
                     if (sprite is EnemySprite || sprite is RockSprite)
                     {
-                        GameState.Lives--;
-                        if (GameState.Lives == 0)
-                        {
-                            GoToFinished();
-                        }
-                        else
-                        {
-                            GoToCrashed();
-                        }
+                        GoToCrashed();
                         break;
                     }
                     else if (sprite is FlagSprite)
@@ -115,8 +101,46 @@ namespace RallySharp.Stages
             }
         }
 
+        public void GoToStart()
+        {
+            GameState.Level = 0;
+            GameState.Score = 0;
+            GameState.Lives = 3;
+            GameState.Fuel = 512;
+            GameState.FlagScore = 100;
+            GameState.Delay = 0;
+
+            InitSprites();
+
+            Add(new MainSprite { Pos = (480, 1272), Animation = new(0) });
+
+            Update = Start;
+            foreach (var sprite1 in sprites)
+            {
+                sprite1.Start();
+            }
+        }
+
+        private void InitSprites()
+        {
+            sprites.Clear();
+            mainSprite = default;
+        }
+
         public void GoToReady()
         {
+            InitSprites();
+
+            Add(new MainSprite { Pos = (480, 1272), Animation = new(0) });
+            Add(new EnemySprite { Pos = (480, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+            Add(new EnemySprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+            Add(new EnemySprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+
+            AddRandom<FlagSprite>(10);
+            AddRandom<RockSprite>(5);
+
+            GameState.Delay = 50;
+
             Update = Ready;
             foreach (var sprite1 in sprites)
             {
@@ -126,6 +150,8 @@ namespace RallySharp.Stages
 
         public void GoToRunning()
         {
+            GameState.Delay = 0;
+
             Update = Running;
             foreach (var sprite1 in sprites)
             {
@@ -133,9 +159,17 @@ namespace RallySharp.Stages
             }
         }
 
-
         private void GoToCrashed()
         {
+            GameState.Lives--;
+            if (GameState.Lives == 0)
+            {
+                GoToFinished();
+                return;
+            }
+
+            GameState.Delay = 50;
+
             Update = Crashed;
             foreach (var sprite1 in sprites)
             {
@@ -145,6 +179,8 @@ namespace RallySharp.Stages
 
         private void GoToFinished()
         {
+            GameState.Delay = 50;
+
             Update = Finished;
             foreach (var sprite1 in sprites)
             {
@@ -154,6 +190,8 @@ namespace RallySharp.Stages
 
         private void GoToCompleted()
         {
+            GameState.Delay = 50;
+
             Update = Completed;
             foreach (var sprite1 in sprites)
             {
@@ -161,15 +199,39 @@ namespace RallySharp.Stages
             }
         }
 
-        private void Ready()
+        private void Start()
         {
             if (Fire.Triggered())
             {
-                GoToRunning();
+                GoToReady();
+                return;
             }
 
-            mainSprite.Update();
-            for (var i = 1; i < sprites.Count; i++)
+            for (var i = 0; i < sprites.Count; i++)
+            {
+                var sprite = sprites[i];
+                sprite.Update();
+            }
+        }
+
+        private void Ready()
+        {
+            if (GameState.Delay > 0)
+            {
+                GameState.Delay--;
+            }
+            else
+            {
+                GoToRunning();
+                return;
+            }
+            if (Fire.Triggered())
+            {
+                GoToRunning();
+                return;
+            }
+
+            for (var i = 0; i < sprites.Count; i++)
             {
                 var sprite = sprites[i];
                 sprite.Update();
@@ -178,8 +240,17 @@ namespace RallySharp.Stages
 
         private void Crashed()
         {
-            mainSprite.Update();
-            for (var i = 1; i < sprites.Count; i++)
+            if (GameState.Delay > 0)
+            {
+                GameState.Delay--;
+            }
+            else
+            {
+                GoToReady();
+                return;
+            }
+
+            for (var i = 0; i < sprites.Count; i++)
             {
                 var sprite = sprites[i];
                 sprite.Update();
@@ -188,8 +259,17 @@ namespace RallySharp.Stages
 
         private void Completed()
         {
-            mainSprite.Update();
-            for (var i = 1; i < sprites.Count; i++)
+            if (GameState.Delay > 0)
+            {
+                GameState.Delay--;
+            }
+            else
+            {
+                GoToStart();
+                return;
+            }
+
+            for (var i = 0; i < sprites.Count; i++)
             {
                 var sprite = sprites[i];
                 sprite.Update();
@@ -198,8 +278,17 @@ namespace RallySharp.Stages
 
         private void Finished()
         {
-            mainSprite.Update();
-            for (var i = 1; i < sprites.Count; i++)
+            if (GameState.Delay > 0)
+            {
+                GameState.Delay--;
+            }
+            else
+            {
+                GoToStart();
+                return;
+            }
+
+            for (var i = 0; i < sprites.Count; i++)
             {
                 var sprite = sprites[i];
                 sprite.Update();

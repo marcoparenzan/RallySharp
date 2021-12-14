@@ -16,10 +16,7 @@ namespace RallySharp.WinForms
             Application.SetCompatibleTextRenderingDefault(false);
 
             var gameState = new GameState();
-            var stage = new Stage
-            {
-                GameState = gameState
-            };
+            var stage = new Stage();
 
             var selected_tilemap = Tilemap.Data;
             var selected_tilesheet = new Bitmap(new MemoryStream(Tilesheet.Data));
@@ -75,7 +72,6 @@ namespace RallySharp.WinForms
                         var tileId = selected_tilemap[offset_row++] - 1;
                         var rect = new RectangleF(xp, yp, Tilesheet.Width, Tilesheet.Height);
                         form.CurrentGraphics.DrawImage(selected_tilesheet, rect, selected_tilesheetrects[tileId], GraphicsUnit.Pixel);
-                        // bufferedGraphics.Graphics.FillRectangle(tileId == 1 ? Brushes.Blue : Brushes.Black, rect);
                         xp += Tilesheet.Width;
                     }
                     offset_i += (int)Tilemap.Width;
@@ -97,14 +93,9 @@ namespace RallySharp.WinForms
                     if (projection.Y > form.ClientRectangle.Height - Tilesheet.Height) continue;
 
                     form.CurrentGraphics.DrawImage(selected_spritesheet, projection, selected_spritesheetrects[sprite.CurrentFrame], GraphicsUnit.Pixel);
-                    // bufferedGraphics.Graphics.FillRectangle(Brushes.Red, projection);
-                    //bufferedGraphics.Graphics.DrawRectangle(Pens.White, projection.X, projection.Y, projection.Width - 1, projection.Height - 1);
                 }
 
-                ///
-                ///
-                ///
-                form.CurrentGraphics.DrawString($"Level={stage.GameState.Level+1} Lives={stage.GameState.Lives} Score={stage.GameState.Score} FlagScore={stage.GameState.FlagScore} Fuel={stage.GameState.Fuel} Current={stage.MainSprite.Pos} Animation={stage.MainSprite.CurrentFrame}", form.Font, Brushes.White, 32, 32);
+                form.CurrentGraphics.DrawString($"Delay={stage.GameState.Delay} Level={stage.GameState.Level+1} Lives={stage.GameState.Lives} Score={stage.GameState.Score} FlagScore={stage.GameState.FlagScore} Fuel={stage.GameState.Fuel} Current={stage.MainSprite.Pos} Animation={stage.MainSprite.CurrentFrame}", form.Font, Brushes.White, 32, 32);
             }
 
             form.KeyDown += (s, e) => {
