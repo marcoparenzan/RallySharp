@@ -1,4 +1,4 @@
-using RallySharp.Levels;
+using RallySharp.Stages;
 using System;
 using System.Drawing;
 using System.IO;
@@ -16,17 +16,17 @@ namespace RallySharp.WinForms
             Application.SetCompatibleTextRenderingDefault(false);
 
             var gameState = new GameState();
-            var level = new Level0
+            var stage = new Stage
             {
                 GameState = gameState
             };
 
-            var selected_tilemap = Tilemap.Data[level.Index];
-            var selected_tilesheet = new Bitmap(new MemoryStream(Tilesheet.data0));
-            var selected_tilesheetrects = Tilesheet.Rects[level.Index];
+            var selected_tilemap = Tilemap.Data;
+            var selected_tilesheet = new Bitmap(new MemoryStream(Tilesheet.Data));
+            var selected_tilesheetrects = Tilesheet.Rects;
 
-            var selected_spritesheet = new Bitmap(new MemoryStream(Spritesheet.data0));
-            var selected_spritesheetrects = Spritesheet.Rects[level.Index];
+            var selected_spritesheet = new Bitmap(new MemoryStream(Spritesheet.Data));
+            var selected_spritesheetrects = Spritesheet.Rects;
 
             var form = new DoubleBufferForm((Tilesheet.Width, Tilesheet.Height));
             //form.FormBorderStyle = FormBorderStyle.None;
@@ -42,8 +42,8 @@ namespace RallySharp.WinForms
                 //
                 //
 
-                var focus_x = level.MainSprite.Pos.X - (int)(form.ClientRectangle.Width / 2); if (focus_x < Tilesheet.Width) focus_x = Tilesheet.Width;
-                var focus_y = level.MainSprite.Pos.Y - (int)(form.ClientRectangle.Height / 2); if (focus_y < Tilesheet.Height) focus_y = Tilesheet.Height;
+                var focus_x = stage.MainSprite.Pos.X - (int)(form.ClientRectangle.Width / 2); if (focus_x < Tilesheet.Width) focus_x = Tilesheet.Width;
+                var focus_y = stage.MainSprite.Pos.Y - (int)(form.ClientRectangle.Height / 2); if (focus_y < Tilesheet.Height) focus_y = Tilesheet.Height;
 
                 //
                 // render world
@@ -86,7 +86,7 @@ namespace RallySharp.WinForms
                 // render sprites
                 //
 
-                foreach (var sprite in level.Sprites)
+                foreach (var sprite in stage.Sprites)
                 {
                     var projection = new RectangleF(sprite.Pos.X - focus_x, sprite.Pos.Y - focus_y, Tilesheet.Width, Tilesheet.Height);
 
@@ -104,7 +104,7 @@ namespace RallySharp.WinForms
                 ///
                 ///
                 ///
-                form.CurrentGraphics.DrawString($"Lives={level.GameState.Lives} Score={level.GameState.Score} FlagScore={level.GameState.FlagScore} Fuel={level.GameState.Fuel} Current={level.MainSprite.Pos} Animation={level.MainSprite.CurrentFrame}", form.Font, Brushes.White, 32, 32);
+                form.CurrentGraphics.DrawString($"Level={stage.GameState.Level+1} Lives={stage.GameState.Lives} Score={stage.GameState.Score} FlagScore={stage.GameState.FlagScore} Fuel={stage.GameState.Fuel} Current={stage.MainSprite.Pos} Animation={stage.MainSprite.CurrentFrame}", form.Font, Brushes.White, 32, 32);
             }
 
             form.KeyDown += (s, e) => {
@@ -115,19 +115,19 @@ namespace RallySharp.WinForms
                         form.Close();
                         break;
                     case Keys.Space:
-                        level.Fire.Set();
+                        stage.Fire.Set();
                         break;
                     case Keys.Left:
-                        level.MoveLeft.Set();
+                        stage.MoveLeft.Set();
                         break;
                     case Keys.Right:
-                        level.MoveRight.Set();
+                        stage.MoveRight.Set();
                         break;
                     case Keys.Up:
-                        level.MoveUp.Set();
+                        stage.MoveUp.Set();
                         break;
                     case Keys.Down:
-                        level.MoveDown.Set();
+                        stage.MoveDown.Set();
                         break;
                     default:
                         break;
@@ -139,19 +139,19 @@ namespace RallySharp.WinForms
                 switch (e.KeyCode)
                 {
                     case Keys.Space:
-                        level.Fire.Reset();
+                        stage.Fire.Reset();
                         break;
                     case Keys.Left:
-                        level.MoveLeft.Reset();
+                        stage.MoveLeft.Reset();
                         break;
                     case Keys.Right:
-                        level.MoveRight.Reset();
+                        stage.MoveRight.Reset();
                         break;
                     case Keys.Up:
-                        level.MoveUp.Reset();
+                        stage.MoveUp.Reset();
                         break;
                     case Keys.Down:
-                        level.MoveDown.Reset();
+                        stage.MoveDown.Reset();
                         break;
                     default:
                         break;
@@ -170,7 +170,7 @@ namespace RallySharp.WinForms
 
                 RenderFrame();
                 form.Invalidate();
-                level.Update();
+                stage.Update();
 
                 var stop = DateTime.Now;
                 form.FrameRate = (int)Math.Round(1000.0 / (stop - start).TotalMilliseconds, 0);

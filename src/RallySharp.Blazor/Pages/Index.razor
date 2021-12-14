@@ -1,18 +1,22 @@
 ﻿@page "/"
-@using RallySharp.Levels
 @using System.Threading
+@using RallySharp.Stages
 
 @inject IJSRuntime _jsRuntime
 
-<canvas tabindex="0" width="640" height="960" @onkeydown="HandleKeyDown" @onkeyup="HandleKeyUp" @ref="canvas">
+<canvas width="640" height="960">
 
 </canvas>
+
+<div tabindex="0" width="640" height="960" @onkeydown="HandleKeyDown" @onkeyup="HandleKeyUp" @ref="ctrl">
+    Use arrows to move, press Space to start
+</div>
 
 @code
 {
     private Timer timer;
-    private Level0 level;
-    private ElementReference canvas;
+    private Stage stage;
+    private ElementReference ctrl;
 
     void HandleKeyDown(KeyboardEventArgs e) {
 
@@ -23,19 +27,19 @@
             //    break;
             case "ShiftLeft":
             case "ShiftRight":
-                level.Fire.Set();
+                stage.Fire.Set();
                 break;
             case "ArrowLeft":
-                level.MoveLeft.Set();
+                stage.MoveLeft.Set();
                 break;
             case "ArrowRight":
-                level.MoveRight.Set();
+                stage.MoveRight.Set();
                 break;
             case "ArrowUp":
-                level.MoveUp.Set();
+                stage.MoveUp.Set();
                 break;
             case "ArrowDown":
-                level.MoveDown.Set();
+                stage.MoveDown.Set();
                 break;
             default:
                 break;
@@ -49,19 +53,19 @@
         {
             case "ShiftLeft":
             case "ShiftRight":
-                level.Fire.Reset();
+                stage.Fire.Reset();
                 break;
             case "ArrowLeft":
-                level.MoveLeft.Reset();
+                stage.MoveLeft.Reset();
                 break;
             case "ArrowRight":
-                level.MoveRight.Reset();
+                stage.MoveRight.Reset();
                 break;
             case "ArrowUp":
-                level.MoveUp.Reset();
+                stage.MoveUp.Reset();
                 break;
             case "ArrowDown":
-                level.MoveDown.Reset();
+                stage.MoveDown.Reset();
                 break;
             default:
                 break;
@@ -72,7 +76,7 @@
     {
         if (firstRender)
         {
-            level = new Level0
+            stage = new Stage
                 {
                     GameState = new GameState
                     {
@@ -80,13 +84,13 @@
                     }
                 };
 
-            await _jsRuntime.InvokeAsync<object>("setImage", "spritesheet", Convert.ToBase64String(Spritesheet.data0));
-            await _jsRuntime.InvokeAsync<object>("setImage", "tilesheet", Convert.ToBase64String(Tilesheet.data0));
-            await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilemap", Tilemap.Data[0]);
-            await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilesheetrects", Tilesheet.Rects[0]);
-            await _jsRuntime.InvokeAsync<object>("setArray", "selected_spritesheetrects", Spritesheet.Rects[0]);
+            await _jsRuntime.InvokeAsync<object>("setImage", "spritesheet", Convert.ToBase64String(Spritesheet.Data));
+            await _jsRuntime.InvokeAsync<object>("setImage", "tilesheet", Convert.ToBase64String(Tilesheet.Data));
+            await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilemap", Tilemap.Data);
+            await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilesheetrects", Tilesheet.Rects);
+            await _jsRuntime.InvokeAsync<object>("setArray", "selected_spritesheetrects", Spritesheet.Rects);
 
-            level.GoToReady();
+            stage.GoToReady();
 
             var frameSetup = 30;
             var refrate = (int) Math.Round(1000.0 / frameSetup, 0);
@@ -96,14 +100,14 @@
             {
                 var start = DateTime.Now;
 
-                await _jsRuntime.InvokeAsync<object>("renderFrame", level);
-                level.Update();
+                await _jsRuntime.InvokeAsync<object>("renderFrame", stage);
+                stage.Update();
 
                 var stop = DateTime.Now;
                 framerate = (int)Math.Round(1000.0 / (stop - start).TotalMilliseconds, 0);
             }, null, frameSetup, refrate);
             
-            await _jsRuntime.InvokeAsync<object>("setFocusToElement", canvas);
+            await _jsRuntime.InvokeAsync<object>("setFocusToElement", ctrl);
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using RallySharp.Levels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RallySharp.Stages;
 
 namespace RallySharp.Models
 {
@@ -52,7 +47,7 @@ namespace RallySharp.Models
                 }
 
                 var offset = (int)(yt * Tilemap.Width + xt);
-                var tileId = Tilemap.Data[0][offset];
+                var tileId = Tilemap.Data[offset];
 
                 if (tileId != 2)
                 {

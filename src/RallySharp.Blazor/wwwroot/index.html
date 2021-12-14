@@ -49,7 +49,7 @@
         };
     </script>
     <script>
-        window.renderFrame = (level) => {
+        window.renderFrame = (stage) => {
             var cnvss = document.getElementsByTagName("canvas");
             if (cnvss.length == 0) return;
 
@@ -70,8 +70,8 @@
             //
             //
 
-            var focus_x = level.mainSprite.pos.x - 320; if (focus_x < 24) focus_x = 24;
-            var focus_y = level.mainSprite.pos.y - 480; if (focus_y < 24) focus_y = 24;
+            var focus_x = stage.mainSprite.pos.x - 320; if (focus_x < 24) focus_x = 24;
+            var focus_y = stage.mainSprite.pos.y - 480; if (focus_y < 24) focus_y = 24;
 
             //
             // render world
@@ -111,8 +111,8 @@
             // render sprites
             //
 
-            for (var i = 0; i < level.sprites.length; i++) {
-                var sprite = level.sprites[i];
+            for (var i = 0; i < stage.sprites.length; i++) {
+                var sprite = stage.sprites[i];
 
                 var projection = { "x": sprite.pos.x - focus_x, "y": sprite.pos.y - focus_y, "w": 24, "h": 24 };
 
@@ -129,7 +129,7 @@
             ///
             ///
             ///
-            ctx.fillText(`Lives=${level.gameState.lives} Score=${level.gameState.score} FlagScore=${level.gameState.flagScore} Fuel=${level.gameState.fuel} Current=${level.mainSprite.pos} Animation=${level.mainSprite.currentFrame}`, 32, 32);
+            ctx.fillText(`Level=${stage.gameState.level+1} Lives=${stage.gameState.lives} Score=${stage.gameState.score} FlagScore=${stage.gameState.flagScore} Fuel=${stage.gameState.fuel} Current=${stage.mainSprite.pos} Animation=${stage.mainSprite.currentFrame}`, 32, 32);
         }
     </script>
 </body>

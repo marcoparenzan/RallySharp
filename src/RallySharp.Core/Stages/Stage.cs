@@ -3,20 +3,26 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace RallySharp.Levels
+namespace RallySharp.Stages
 {
-    public abstract class Level
+    public class Stage
     {
-        public Level()
+        public Stage()
         {
             sprites = new();
+            Add(new MainSprite { Pos = (480, 1272), Animation = new(0) });
+            Add(new EnemySprite { Pos = (480, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+            Add(new EnemySprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+            Add(new EnemySprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+
+            AddRandom<FlagSprite>(10);
+            AddRandom<RockSprite>(5);
+
             // Ready
             Update = Ready;
         }
 
         public GameState GameState { get; set; }
-
-        public abstract int Index { get; }
 
         MainSprite mainSprite;
 
@@ -221,7 +227,7 @@ namespace RallySharp.Levels
                 // exclusion condition in the starting rectangle 13,49 28,59
                 if (x0 >= 13 && x0 <= 28 && y0 >= 49 && y0 <= 59) continue;
                 // exclusion if tile not empty
-                var tileId = Tilemap.Data0[y0 * Tilemap.Width + x0];
+                var tileId = Tilemap.Data[y0 * Tilemap.Width + x0];
                 if (tileId != 2) continue;
 
                 var sprite = Activator.CreateInstance<TSprite>();
