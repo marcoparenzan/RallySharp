@@ -29,7 +29,7 @@ namespace RallySharp.Models
         {
         }
 
-        protected virtual void UpdateFinished()
+        protected virtual void UpdateEnded()
         {
         }
 
@@ -60,9 +60,9 @@ namespace RallySharp.Models
             return this;
         }
 
-        public Sprite Finished()
+        public Sprite Ended()
         {
-            Update = UpdateFinished;
+            Update = UpdateEnded;
             return this;
         }
 

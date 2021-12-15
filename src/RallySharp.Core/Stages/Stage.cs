@@ -90,6 +90,11 @@ namespace RallySharp.Stages
                         GameState.Score += GameState.FlagScore;
                         GameState.FlagScore += 100;
                         sprites.Remove(sprite);
+
+                        if (!sprites.Any(xx => xx is FlagSprite))
+                        {
+                            GoToCompleted();
+                        }
                     }
                 }
             }
@@ -106,8 +111,6 @@ namespace RallySharp.Stages
             GameState.Level = 0;
             GameState.Score = 0;
             GameState.Lives = 3;
-            GameState.Fuel = 512;
-            GameState.FlagScore = 100;
             GameState.Delay = 0;
 
             InitSprites();
@@ -133,13 +136,15 @@ namespace RallySharp.Stages
 
             Add(new MainSprite { Pos = (480, 1272), Animation = new(0) });
             Add(new EnemySprite { Pos = (480, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
-            Add(new EnemySprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
-            Add(new EnemySprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+            //Add(new EnemySprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+            //Add(new EnemySprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
 
-            AddRandom<FlagSprite>(10);
-            AddRandom<RockSprite>(5);
+            AddRandom<FlagSprite>(1);
+            AddRandom<RockSprite>(0);
 
+            GameState.Fuel = 512;
             GameState.Delay = 50;
+            GameState.FlagScore = 100;
 
             Update = Ready;
             foreach (var sprite1 in sprites)
@@ -164,7 +169,7 @@ namespace RallySharp.Stages
             GameState.Lives--;
             if (GameState.Lives == 0)
             {
-                GoToFinished();
+                GoToEnded();
                 return;
             }
 
@@ -177,20 +182,18 @@ namespace RallySharp.Stages
             }
         }
 
-        private void GoToFinished()
+        private void GoToEnded()
         {
-            GameState.Delay = 50;
-
-            Update = Finished;
+            Update = Ended;
             foreach (var sprite1 in sprites)
             {
-                sprite1.Finished();
+                sprite1.Ended();
             }
         }
 
         private void GoToCompleted()
         {
-            GameState.Delay = 50;
+            GameState.Delay = GameState.Fuel;
 
             Update = Completed;
             foreach (var sprite1 in sprites)
@@ -262,10 +265,13 @@ namespace RallySharp.Stages
             if (GameState.Delay > 0)
             {
                 GameState.Delay--;
+                GameState.Score += 10;
+                // missing lives and will update hud
             }
             else
             {
-                GoToStart();
+                GameState.Level++;
+                GoToReady();
                 return;
             }
 
@@ -276,7 +282,7 @@ namespace RallySharp.Stages
             }
         }
 
-        private void Finished()
+        private void Ended()
         {
             if (GameState.Delay > 0)
             {

@@ -76,7 +76,7 @@ namespace RallySharp.Models
             if (Animation.CurrentFrame != 48) Animation.Crashed();
         }
 
-        protected override void UpdateFinished()
+        protected override void UpdateEnded()
         {
             if (Animation.CurrentFrame != 48) Animation.Crashed();
         }
