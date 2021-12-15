@@ -136,11 +136,11 @@ namespace RallySharp.Stages
 
             Add(new MainSprite { Pos = (480, 1272), Animation = new(0) });
             Add(new EnemySprite { Pos = (480, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
-            //Add(new EnemySprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
-            //Add(new EnemySprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+            if (GameState.Level > 0) Add(new EnemySprite { Pos = (480 - 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
+            if (GameState.Level > 1) Add(new EnemySprite { Pos = (480 + 48, 1272 + 24 * 4), Animation = new(12), MainSprite = MainSprite });
 
-            AddRandom<FlagSprite>(1);
-            AddRandom<RockSprite>(0);
+            AddRandom<FlagSprite>(GameState.Level + 1);
+            AddRandom<RockSprite>(GameState.Level);
 
             GameState.Fuel = 512;
             GameState.Delay = 50;
