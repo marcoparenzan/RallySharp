@@ -264,7 +264,7 @@ namespace RallySharp.Stages
         {
             if (GameState.Delay > 0)
             {
-                GameState.Delay--;
+                GameState.Delay -= 10;
                 GameState.Score += 10;
                 // missing lives and will update hud
             }
