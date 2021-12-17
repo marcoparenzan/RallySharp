@@ -4,13 +4,13 @@
 
 @inject IJSRuntime _jsRuntime
 
-<div tabindex="0" @onkeydown="HandleKeyDown" @onkeyup="HandleKeyUp" @ref="ctrl">
-    Use arrows to move, press Space to start
+<h1>Rally#</h1>
+<div>
+    Use arrows to move, press Shift to start
 </div>
-<canvas width="640" height="640">
+<canvas width="640" height="640" tabindex="1" @onkeydown="HandleKeyDown" @onkeyup="HandleKeyUp" @ref="ctrl">
 
 </canvas>
-
 
 @code
 {
