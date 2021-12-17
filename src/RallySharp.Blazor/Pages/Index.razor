@@ -4,13 +4,13 @@
 
 @inject IJSRuntime _jsRuntime
 
-<canvas width="640" height="960">
+<div tabindex="0" @onkeydown="HandleKeyDown" @onkeyup="HandleKeyUp" @ref="ctrl">
+    Use arrows to move, press Space to start
+</div>
+<canvas width="640" height="640">
 
 </canvas>
 
-<div tabindex="0" width="640" height="960" @onkeydown="HandleKeyDown" @onkeyup="HandleKeyUp" @ref="ctrl">
-    Use arrows to move, press Space to start
-</div>
 
 @code
 {
@@ -77,13 +77,7 @@
     {
         if (firstRender)
         {
-            stage = new Stage
-                {
-                    GameState = new GameState
-                    {
-
-                    }
-                };
+            stage = new Stage();
 
             await _jsRuntime.InvokeAsync<object>("setImage", "spritesheet", Convert.ToBase64String(Spritesheet.Data));
             await _jsRuntime.InvokeAsync<object>("setImage", "tilesheet", Convert.ToBase64String(Tilesheet.Data));

@@ -16,8 +16,17 @@ namespace RallySharp.Models
 
         protected override void UpdateRunning()
         {
+            if (newDirection.HasValue && newDirection.Value != direction)
+            {
+                if (Pos.X % 24 != 0 || Pos.Y % 24 != 0)
+                {
+                    newDirection = default;
+                }
+            }
+
             newDirection ??= direction;
             byte rotation = 0;
+
 
             while (true)
             {

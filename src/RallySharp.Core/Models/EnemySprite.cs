@@ -61,6 +61,13 @@ namespace RallySharp.Models
                 var yt = 0;
 
                 newDirection = tentative_sets[tentative_set_idx][rotation];
+                if (newDirection.Value != direction)
+                {
+                    if (Pos.X % 24 != 0 || Pos.Y % 24 != 0)
+                    {
+                        newDirection = direction;
+                    }
+                }
 
                 var nextPos = Pos + Vec.Speed[newDirection.Value];
                 if (newDirection == 0)

@@ -36,7 +36,7 @@
         window.setImage = function (id, base64content) {
             const img = document.createElement("img");
             img.id = id;
-            img.style = "visibility:hidden;";
+            img.hidden = true;
             img.src = "data:image/png;base64," + base64content;
             document.body.appendChild(img);
             return true;
@@ -64,14 +64,14 @@
             //
             //
 
-            ctx.clearRect(0, 0, 640, 960);
+            ctx.clearRect(0, 0, 640, 640);
 
             //
             //
             //
 
             var focus_x = stage.mainSprite.pos.x - 320; if (focus_x < 24) focus_x = 24;
-            var focus_y = stage.mainSprite.pos.y - 480; if (focus_y < 24) focus_y = 24;
+            var focus_y = stage.mainSprite.pos.y - 320; if (focus_y < 24) focus_y = 24;
 
             //
             // render world
@@ -79,7 +79,7 @@
 
             // how many rects in the viewport
             var viewport_width = Math.floor(640 / 24, 0);
-            var viewport_height = Math.floor(960 / 24, 0);
+            var viewport_height = Math.floor(640 / 24, 0);
 
             // the x,y converted to offset in the map
             var offset_y = Math.floor(Math.max(focus_y, 0) / 24, 0);
@@ -120,7 +120,7 @@
                 if (projection.x < 0) continue;
                 if (projection.y < 0) continue;
                 if (projection.x > 640 - 24) continue;
-                if (projection.y > 960 - 24) continue;
+                if (projection.y > 640 - 24) continue;
 
                 var rect = selected_spritesheetrects[sprite.currentFrame];
                 ctx.drawImage(selected_spritesheet, rect.x, rect.y, rect.width, rect.height, projection.x, projection.y, projection.w, projection.h);
