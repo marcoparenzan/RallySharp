@@ -99,6 +99,8 @@
             timer = new Timer(async xx =>
             {
                 var start = DateTime.Now;
+                
+                await _jsRuntime.InvokeAsync<object>("setFocusToElement", ctrl);
 
                 await _jsRuntime.InvokeAsync<object>("renderFrame", stage);
                 stage.Update();
@@ -107,7 +109,6 @@
                 framerate = (int)Math.Round(1000.0 / (stop - start).TotalMilliseconds, 0);
             }, null, frameSetup, refrate);
             
-            await _jsRuntime.InvokeAsync<object>("setFocusToElement", ctrl);
         }
     }
 }

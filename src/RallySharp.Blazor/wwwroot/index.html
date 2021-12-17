@@ -10,7 +10,7 @@
     <link href="css/app.css" rel="stylesheet" />
 </head>
 
-<body>
+<body style="text-align:center">
     <div id="app">Loading...</div>
 
     <div id="blazor-error-ui">
@@ -21,7 +21,14 @@
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
         window.setFocusToElement = (element) => {
-            element.focus();
+            element = document.getElementsByTagName("canvas")[0];
+            if (element != document.activeElement) {
+                element.focus();
+                console.log("focus");
+            }
+            else {
+                console.log("already focus");
+            }
         };
     </script>
     <script>
