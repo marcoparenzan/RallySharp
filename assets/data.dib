@@ -1,5 +1,10 @@
 #!csharp
 
 using System.IO;
-var bytes = File.ReadAllBytes("car-spritesheet.png");
-string.Join(",", bytes.Select(xx => $"0x{xx:X2}"))
+var filename = "Tiled\\Level2\\xmas-tileset2.png";
+
+var bytes = File.ReadAllBytes(filename);
+var blockSize = 256;
+var blockCount = bytes.Length / blockSize+((bytes.Length % blockSize) != 0 ? 1 : 0);
+
+string.Join(",\r\n", Enumerable.Range(0, blockCount).Select(xx => string.Join(",", bytes.Skip(xx*blockSize).Take(blockSize).Select(xx => $"0x{xx:X2}"))))

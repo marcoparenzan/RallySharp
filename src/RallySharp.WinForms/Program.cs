@@ -105,7 +105,10 @@ namespace RallySharp.WinForms
                     case Keys.Escape:
                         form.Close();
                         break;
-                    case Keys.Space:
+                    case Keys.RShiftKey:
+                    case Keys.LShiftKey:
+                    case Keys.ShiftKey:
+                    case Keys.Shift:
                         stage.Fire.Set();
                         break;
                     case Keys.Left:
@@ -129,7 +132,10 @@ namespace RallySharp.WinForms
 
                 switch (e.KeyCode)
                 {
-                    case Keys.Space:
+                    case Keys.RShiftKey:
+                    case Keys.LShiftKey:
+                    case Keys.ShiftKey:
+                    case Keys.Shift:
                         stage.Fire.Reset();
                         break;
                     case Keys.Left:
