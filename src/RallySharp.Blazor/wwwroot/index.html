@@ -20,15 +20,57 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
-        window.setFocusToElement = (element) => {
-            element = document.getElementsByTagName("canvas")[0];
-            if (element != document.activeElement) {
-                element.focus();
-                console.log("focus");
+        window.preparePage = (proxy) => {
+
+            if (document.hasFocus() == false) {
+                window.focus();
             }
-            else {
-                console.log("already focus");
-            }
+
+            document.addEventListener("keydown", function (e) {
+                switch (e.keyCode) {
+                    case 37:
+                        proxy.invokeMethodAsync("HandleKeyDown", "ArrowLeft");
+                        break;
+                    case 39:
+                        proxy.invokeMethodAsync("HandleKeyDown", "ArrowRight");
+                        break;
+                    case 38:
+                        proxy.invokeMethodAsync("HandleKeyDown", "ArrowUp");
+                        break;
+                    case 40:
+                        proxy.invokeMethodAsync("HandleKeyDown", "ArrowDown");
+                        break;
+                    case 16:
+                        proxy.invokeMethodAsync("HandleKeyDown", "ShiftLeft");
+                        break;
+                    default:
+                        break;
+                }
+            });
+            document.addEventListener("keyup", function (e) {
+                switch (e.keyCode) {
+                    case 37:
+                        proxy.invokeMethodAsync("HandleKeyUp", "ArrowLeft");
+                        break;
+                    case 39:
+                        proxy.invokeMethodAsync("HandleKeyUp", "ArrowRight");
+                        break;
+                    case 38:
+                        proxy.invokeMethodAsync("HandleKeyUp", "ArrowUp");
+                        break;
+                    case 40:
+                        proxy.invokeMethodAsync("HandleKeyUp", "ArrowDown");
+                        break;
+                    case 16:
+                        proxy.invokeMethodAsync("HandleKeyUp", "ShiftLeft");
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            window.focus();
+
         };
     </script>
     <script>
@@ -37,8 +79,8 @@
                 width: window.innerWidth,
                 height: window.innerHeight,
             };
-        };</script>
-
+        };
+    </script>
     <script>
         window.setImage = function (id, base64content) {
             const img = document.createElement("img");
@@ -136,7 +178,7 @@
             ///
             ///
             ///
-            ctx.fillText(`Delay=${stage.gameState.delay} Level=${stage.gameState.level+1} Lives=${stage.gameState.lives} Score=${stage.gameState.score} FlagScore=${stage.gameState.flagScore} Fuel=${stage.gameState.fuel} Current=${stage.mainSprite.pos} Animation=${stage.mainSprite.currentFrame}`, 32, 32);
+            ctx.fillText(`Delay=${stage.gameState.delay} Level=${stage.gameState.level + 1} Lives=${stage.gameState.lives} Score=${stage.gameState.score} FlagScore=${stage.gameState.flagScore} Fuel=${stage.gameState.fuel} Current=${stage.mainSprite.pos} Animation=${stage.mainSprite.currentFrame}`, 32, 32);
         }
     </script>
 </body>

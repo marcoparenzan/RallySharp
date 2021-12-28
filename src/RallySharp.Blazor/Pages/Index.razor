@@ -1,14 +1,14 @@
 ﻿@page "/"
 @using System.Threading
 @using RallySharp.Stages
-
 @inject IJSRuntime _jsRuntime
 
 <h1>Rally#</h1>
 <div>
     Use arrows to move, press Shift to start
 </div>
-<canvas width="640" height="640" tabindex="1" @onkeydown="HandleKeyDown" @onkeyup="HandleKeyUp" @ref="ctrl">
+ @*tabindex="1" @onkeydown="HandleKeyDown" @onkeyup="HandleKeyUp"*@
+<canvas width="640" height="640">
 
 </canvas>
 
@@ -17,11 +17,14 @@
     private Timer timer;
     private GameState gameState;
     private Stage stage;
-    private ElementReference ctrl;
+    private DotNetObjectReference<Index>? thisRef;
 
-    void HandleKeyDown(KeyboardEventArgs e) {
+    //void HandleKeyDown(KeyboardEventArgs e) => HandleKeyDown(e.Code);
 
-        switch (e.Code)
+    [JSInvokable]
+    public void HandleKeyDown(string code) {
+
+        switch (code)
         {
             //case "ESC":
             //    form.Close();
@@ -48,9 +51,12 @@
 
     }
 
-    void HandleKeyUp(KeyboardEventArgs e) {
+    //void HandleKeyUp(KeyboardEventArgs e) => HandleKeyUp(e.Code);
 
-        switch (e.Code)
+    [JSInvokable]
+    public void HandleKeyUp(string code) {
+
+        switch (code)
         {
             case "ShiftLeft":
             case "ShiftRight":
@@ -77,13 +83,20 @@
     {
         if (firstRender)
         {
-            stage = new Stage();
+            /// SETUP JS
+            /// 
+            thisRef = DotNetObjectReference.Create(this);
+            await _jsRuntime.InvokeAsync<object>("preparePage", thisRef);
 
             await _jsRuntime.InvokeAsync<object>("setImage", "spritesheet", Convert.ToBase64String(Spritesheet.Data));
             await _jsRuntime.InvokeAsync<object>("setImage", "tilesheet", Convert.ToBase64String(Tilesheet.Data));
             await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilemap", Tilemap.Data);
             await _jsRuntime.InvokeAsync<object>("setArray", "selected_tilesheetrects", Tilesheet.Rects);
             await _jsRuntime.InvokeAsync<object>("setArray", "selected_spritesheetrects", Spritesheet.Rects);
+
+            /// SETUP OBJECTS
+
+            stage = new Stage();
 
             gameState = new GameState();
             stage = new Stage
@@ -96,11 +109,11 @@
             var refrate = (int) Math.Round(1000.0 / frameSetup, 0);
             var framerate = 0;
 
+            /// TIMER
+
             timer = new Timer(async xx =>
             {
                 var start = DateTime.Now;
-                
-                await _jsRuntime.InvokeAsync<object>("setFocusToElement", ctrl);
 
                 await _jsRuntime.InvokeAsync<object>("renderFrame", stage);
                 stage.Update();
@@ -108,7 +121,7 @@
                 var stop = DateTime.Now;
                 framerate = (int)Math.Round(1000.0 / (stop - start).TotalMilliseconds, 0);
             }, null, frameSetup, refrate);
-            
+
         }
     }
 }
